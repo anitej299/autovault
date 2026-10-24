@@ -1,1 +1,28 @@
-import {app} from './app.js';import {env} from './config/env.js';import {db} from './repositories/db.js';try{await db.$connect();const server=app.listen(env.PORT,'127.0.0.1',()=>console.log('AutoVault API ready at http://127.0.0.1:'+env.PORT+'; frontend origin '+env.FRONTEND_ORIGIN));const stop=()=>{server.close(()=>{void db.$disconnect().then(()=>process.exit(0));});setTimeout(()=>process.exit(1),10000).unref();};process.on('SIGINT',stop);process.on('SIGTERM',stop);}catch(error){console.error('Startup failed: check DATABASE_URL, migrations and environment configuration.',error instanceof Error?error.message:'Unknown error');process.exit(1);}
+import { app } from "./app.js";
+import { env } from "./config/env.js";
+import { db } from "./repositories/db.js";
+try {
+  await db.$connect();
+  const server = app.listen(env.PORT, "127.0.0.1", () =>
+    console.log(
+      "AutoVault API ready at http://127.0.0.1:" +
+        env.PORT +
+        "; frontend origin " +
+        env.FRONTEND_ORIGIN,
+    ),
+  );
+  const stop = () => {
+    server.close(() => {
+      void db.$disconnect().then(() => process.exit(0));
+    });
+    setTimeout(() => process.exit(1), 10000).unref();
+  };
+  process.on("SIGINT", stop);
+  process.on("SIGTERM", stop);
+} catch (error) {
+  console.error(
+    "Startup failed: check DATABASE_URL, migrations and environment configuration.",
+    error instanceof Error ? error.message : "Unknown error",
+  );
+  process.exit(1);
+}

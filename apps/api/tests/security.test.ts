@@ -1,7 +1,52 @@
-import {it,expect,afterAll} from 'vitest';import request from 'supertest';import jwt from 'jsonwebtoken';import {app} from '../src/app.js';import {PrismaClient} from '@prisma/client';const db=new PrismaClient();afterAll(()=>db.$disconnect());
-it('reports database health',async()=>{const r=await request(app).get('/api/health');expect(r.status).toBe(200);expect(r.body.status).toBe('ok');});
-it('returns consistent JSON 404',async()=>{const r=await request(app).get('/api/missing');expect(r.status).toBe(404);expect(r.body.error.message).toBe('Route not found');});
-it('rejects signed malformed JWT subjects without database errors',async()=>{const t=jwt.sign({sub:'bad'},process.env.JWT_SECRET!,{issuer:'autovault',audience:'autovault-web'});expect((await request(app).get('/api/vehicles').auth(t,{type:'bearer'})).status).toBe(401);});
-it('rejects oversized JSON with consistent status',async()=>{const r=await request(app).post('/api/auth/login').send({email:'a'.repeat(20000)});expect(r.status).toBe(413);expect(r.body.error.message).toBe('Request body too large');});
-it('uses security headers and explicit CORS',async()=>{const r=await request(app).get('/api/health').set('Origin','https://untrusted.example');expect(r.headers['x-content-type-options']).toBe('nosniff');expect(r.headers['access-control-allow-origin']).toBe('http://localhost:5173');expect(r.headers['x-powered-by']).toBeUndefined();});
-it('returns consistent malformed JSON error',async()=>{const r=await request(app).post('/api/auth/login').set('Content-Type','application/json').send('{');expect(r.status).toBe(400);expect(r.body.error.message).toBe('Invalid JSON');});
+import { it, expect, afterAll } from "vitest";
+import request from "supertest";
+import jwt from "jsonwebtoken";
+import { app } from "../src/app.js";
+import { PrismaClient } from "@prisma/client";
+const db = new PrismaClient();
+afterAll(() => db.$disconnect());
+it("reports database health", async () => {
+  const r = await request(app).get("/api/health");
+  expect(r.status).toBe(200);
+  expect(r.body.status).toBe("ok");
+});
+it("returns consistent JSON 404", async () => {
+  const r = await request(app).get("/api/missing");
+  expect(r.status).toBe(404);
+  expect(r.body.error.message).toBe("Route not found");
+});
+it("rejects signed malformed JWT subjects without database errors", async () => {
+  const t = jwt.sign({ sub: "bad" }, process.env.JWT_SECRET!, {
+    issuer: "autovault",
+    audience: "autovault-web",
+  });
+  expect(
+    (await request(app).get("/api/vehicles").auth(t, { type: "bearer" }))
+      .status,
+  ).toBe(401);
+});
+it("rejects oversized JSON with consistent status", async () => {
+  const r = await request(app)
+    .post("/api/auth/login")
+    .send({ email: "a".repeat(20000) });
+  expect(r.status).toBe(413);
+  expect(r.body.error.message).toBe("Request body too large");
+});
+it("uses security headers and explicit CORS", async () => {
+  const r = await request(app)
+    .get("/api/health")
+    .set("Origin", "https://untrusted.example");
+  expect(r.headers["x-content-type-options"]).toBe("nosniff");
+  expect(r.headers["access-control-allow-origin"]).toBe(
+    "http://localhost:5173",
+  );
+  expect(r.headers["x-powered-by"]).toBeUndefined();
+});
+it("returns consistent malformed JSON error", async () => {
+  const r = await request(app)
+    .post("/api/auth/login")
+    .set("Content-Type", "application/json")
+    .send("{");
+  expect(r.status).toBe(400);
+  expect(r.body.error.message).toBe("Invalid JSON");
+});

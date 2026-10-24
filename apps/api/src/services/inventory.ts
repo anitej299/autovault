@@ -1,1 +1,30 @@
-import {withLockedVehicle} from '../repositories/inventory.js';import {HttpError} from '../utils/errors.js';export async function purchaseVehicle(id:string,userId:string,quantity:number){return withLockedVehicle(id,async(tx,vehicle)=>{if(vehicle.quantity<quantity)throw new HttpError(409,'Insufficient stock');const updated=await tx.vehicle.update({where:{id},data:{quantity:{decrement:quantity}}});const purchase=await tx.purchase.create({data:{userId,vehicleId:id,quantity,unitPrice:vehicle.price}});return {vehicle:updated,purchase};});}export async function restockVehicle(id:string,quantity:number){return withLockedVehicle(id,async(tx,vehicle)=>{if(vehicle.quantity+quantity>2147483647)throw new HttpError(409,'Stock limit exceeded');return tx.vehicle.update({where:{id},data:{quantity:{increment:quantity}}});});}
+import { withLockedVehicle } from "../repositories/inventory.js";
+import { HttpError } from "../utils/errors.js";
+export async function purchaseVehicle(
+  id: string,
+  userId: string,
+  quantity: number,
+) {
+  return withLockedVehicle(id, async (tx, vehicle) => {
+    if (vehicle.quantity < quantity)
+      throw new HttpError(409, "Insufficient stock");
+    const updated = await tx.vehicle.update({
+      where: { id },
+      data: { quantity: { decrement: quantity } },
+    });
+    const purchase = await tx.purchase.create({
+      data: { userId, vehicleId: id, quantity, unitPrice: vehicle.price },
+    });
+    return { vehicle: updated, purchase };
+  });
+}
+export async function restockVehicle(id: string, quantity: number) {
+  return withLockedVehicle(id, async (tx, vehicle) => {
+    if (vehicle.quantity + quantity > 2147483647)
+      throw new HttpError(409, "Stock limit exceeded");
+    return tx.vehicle.update({
+      where: { id },
+      data: { quantity: { increment: quantity } },
+    });
+  });
+}

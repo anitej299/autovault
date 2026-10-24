@@ -1,2 +1,13 @@
-import {Router} from 'express';import {requireAuth,requireAdmin} from '../middleware/auth.js';import * as controller from '../controllers/vehicles.js';export const vehicleRouter=Router();vehicleRouter.use(requireAuth);vehicleRouter.get('/search',controller.list);vehicleRouter.get('/summary',controller.summary);vehicleRouter.get('/',controller.list);vehicleRouter.post('/',requireAdmin,controller.create);vehicleRouter.put('/:id',requireAdmin,controller.update);vehicleRouter.delete('/:id',requireAdmin,controller.remove);
-vehicleRouter.post('/:id/purchase',controller.purchase);vehicleRouter.post('/:id/restock',requireAdmin,controller.restock);
+import { Router } from "express";
+import { requireAuth, requireAdmin } from "../middleware/auth.js";
+import * as controller from "../controllers/vehicles.js";
+export const vehicleRouter = Router();
+vehicleRouter.use(requireAuth);
+vehicleRouter.get("/search", controller.list);
+vehicleRouter.get("/summary", controller.summary);
+vehicleRouter.get("/", controller.list);
+vehicleRouter.post("/", requireAdmin, controller.create);
+vehicleRouter.put("/:id", requireAdmin, controller.update);
+vehicleRouter.delete("/:id", requireAdmin, controller.remove);
+vehicleRouter.post("/:id/purchase", controller.purchase);
+vehicleRouter.post("/:id/restock", requireAdmin, controller.restock);

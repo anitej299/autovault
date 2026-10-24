@@ -1,5 +1,25 @@
-import bcrypt from 'bcrypt';import jwt from 'jsonwebtoken';import type {User} from '@prisma/client';import {env} from '../config/env.js';import {users} from '../repositories/users.js';import {HttpError} from '../utils/errors.js';
-const dummyHash=await bcrypt.hash('dummy-password-never-used',12);
-const session=(user:User)=>({user:{id:user.id,email:user.email,role:user.role},token:jwt.sign({sub:user.id},env.JWT_SECRET,{algorithm:'HS256',expiresIn:'15m',issuer:'autovault',audience:'autovault-web'})});
-export async function register(email:string,password:string){return session(await users.create(email,await bcrypt.hash(password,12)));}
-export async function authenticate(email:string,password:string){const user=await users.byEmail(email);const valid=await bcrypt.compare(password,user?.passwordHash??dummyHash);if(!user||!valid)throw new HttpError(401,'Invalid email or password');return session(user);}
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import type { User } from "@prisma/client";
+import { env } from "../config/env.js";
+import { users } from "../repositories/users.js";
+import { HttpError } from "../utils/errors.js";
+const dummyHash = await bcrypt.hash("dummy-password-never-used", 12);
+const session = (user: User) => ({
+  user: { id: user.id, email: user.email, role: user.role },
+  token: jwt.sign({ sub: user.id }, env.JWT_SECRET, {
+    algorithm: "HS256",
+    expiresIn: "15m",
+    issuer: "autovault",
+    audience: "autovault-web",
+  }),
+});
+export async function register(email: string, password: string) {
+  return session(await users.create(email, await bcrypt.hash(password, 12)));
+}
+export async function authenticate(email: string, password: string) {
+  const user = await users.byEmail(email);
+  const valid = await bcrypt.compare(password, user?.passwordHash ?? dummyHash);
+  if (!user || !valid) throw new HttpError(401, "Invalid email or password");
+  return session(user);
+}

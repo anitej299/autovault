@@ -1,3 +1,35 @@
-export async function api<T>(path:string,token?:string,body?:unknown,method?:string):Promise<T>{const response=await fetch('/api'+path,{method:method??(body?'POST':'GET'),headers:{'Content-Type':'application/json',...(token?{Authorization:'Bearer '+token}:{})},...(body?{body:JSON.stringify(body)}:{})});const data=await response.json();if(!response.ok){if(response.status===401&&token)window.dispatchEvent(new Event('autovault:expired'));throw new Error(data.error?.message??'Unable to complete request');}return data;}
-export function money(value:string){return new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR',maximumFractionDigits:2}).format(Number(value));}
-export function totalPrice(value:string,quantity:number){const [whole,fraction='']=value.split('.');const cents=(BigInt(whole)*100n+BigInt(fraction.padEnd(2,'0')))*BigInt(quantity);return (cents/100n)+'.'+String(cents%100n).padStart(2,'0');}
+export async function api<T>(
+  path: string,
+  token?: string,
+  body?: unknown,
+  method?: string,
+): Promise<T> {
+  const response = await fetch("/api" + path, {
+    method: method ?? (body ? "POST" : "GET"),
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: "Bearer " + token } : {}),
+    },
+    ...(body ? { body: JSON.stringify(body) } : {}),
+  });
+  const data = await response.json();
+  if (!response.ok) {
+    if (response.status === 401 && token)
+      window.dispatchEvent(new Event("autovault:expired"));
+    throw new Error(data.error?.message ?? "Unable to complete request");
+  }
+  return data;
+}
+export function money(value: string) {
+  return new Intl.NumberFormat("en-IN", {
+    style: "currency",
+    currency: "INR",
+    maximumFractionDigits: 2,
+  }).format(Number(value));
+}
+export function totalPrice(value: string, quantity: number) {
+  const [whole, fraction = ""] = value.split(".");
+  const cents =
+    (BigInt(whole) * 100n + BigInt(fraction.padEnd(2, "0"))) * BigInt(quantity);
+  return cents / 100n + "." + String(cents % 100n).padStart(2, "0");
+}

@@ -1,1 +1,8 @@
-import {db} from './db.js';import type {VehicleInput} from '../validators/vehicles.js';export const vehicles={create:(data:VehicleInput)=>db.vehicle.create({data}),list:async()=>({items:await db.vehicle.findMany({orderBy:[{createdAt:'desc'},{id:'asc'}]}),total:await db.vehicle.count()}),update:(id:string,data:VehicleInput)=>db.vehicle.update({where:{id},data}),remove:(id:string)=>db.vehicle.delete({where:{id}})};
+import { db } from "./db.js";
+import type { VehicleInput } from "../validators/vehicles.js";
+export const vehicles = {
+  create: (data: VehicleInput) => db.vehicle.create({ data }),
+  update: (id: string, data: VehicleInput) =>
+    db.vehicle.update({ where: { id }, data }),
+  remove: (id: string) => db.vehicle.delete({ where: { id } }),
+};

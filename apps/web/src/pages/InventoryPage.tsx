@@ -1,18 +1,557 @@
-import {useState,useCallback} from 'react';import {useQuery,useMutation,useQueryClient} from '@tanstack/react-query';import {Plus,Search,SlidersHorizontal,ArrowUpRight,CarFront,Boxes,TriangleAlert,IndianRupee,LayoutGrid,List,RefreshCw,Pencil,Trash2,ChevronLeft,ChevronRight} from 'lucide-react';import {useAuth} from '../contexts/Auth';import {api,money,totalPrice} from '../services/api';import type {Vehicle,Inventory,Summary} from '../types';import {CarArt} from '../components/CarArt';import {Modal} from '../components/Modal';import {VehicleForm,type VehicleValues} from '../features/VehicleForm';
-type Action={type:'purchase'|'edit'|'delete'|'restock'|'detail'|'add';vehicle?:Vehicle};
-export function InventoryPage({management=false}:{management?:boolean}){const {session}=useAuth();const token=session!.token;const admin=session!.user.role==='ADMIN';const client=useQueryClient();const [filters,setFilters]=useState<Record<string,string>>({});const [query,setQuery]=useState<Record<string,string>>({});const [page,setPage]=useState(1);const [view,setView]=useState<'grid'|'list'>('grid');const [action,setAction]=useState<Action|null>(null);const [quantity,setQuantity]=useState(1);const [notice,setNotice]=useState('');const [localError,setLocalError]=useState('');const close=useCallback(()=>setAction(null),[]);
-const params=new URLSearchParams({...query,page:String(page),pageSize:'9'}).toString();const inventory=useQuery({queryKey:['inventory',params],queryFn:()=>api<Inventory>('/vehicles/search?'+params,token)});const summary=useQuery({queryKey:['summary'],queryFn:()=>api<Summary>('/vehicles/summary',token)});
-const mutation=useMutation({mutationFn:({path,body,method}:{path:string;body?:unknown;method?:string})=>api(path,token,body,method),onSuccess:()=>{setNotice(action?.type==='purchase'?'Purchase confirmed. Your vehicle is reserved.':'Inventory updated successfully.');setAction(null);void client.invalidateQueries({queryKey:['inventory']});void client.invalidateQueries({queryKey:['summary']});}});
-function open(type:Action['type'],vehicle?:Vehicle){setAction({type,vehicle});setQuantity(1);setNotice('');setLocalError('');mutation.reset();}
-function save(values:VehicleValues){mutation.mutate({path:'/vehicles'+(action?.type==='edit'?'/'+action.vehicle!.id:''),body:values,method:action?.type==='edit'?'PUT':'POST'});}
-const stats=summary.data;const cards=[['Vehicle listings',stats?.listings,CarFront],['Units in stock',stats?.units,Boxes],['Out of stock',stats?.outOfStock,TriangleAlert],['Inventory value',stats?money(stats.value):undefined,IndianRupee]] as const;
-return <div className="space-y-8"><div className="flex flex-wrap items-end justify-between gap-5"><div><p className="eyebrow">{management?'ADMIN WORKSPACE':'THE AUTOVAULT COLLECTION'}</p><h1 className="mt-2 text-3xl font-semibold tracking-tight lg:text-4xl">{management?'Inventory management':'Find your next chapter.'}</h1><p className="mt-3 text-sm text-slate-400">{management?'Keep your collection current, down to the last vehicle.':'Explore exceptional vehicles. Make your next move.'}</p></div>{admin&&<button className="primary" onClick={()=>open('add')}><Plus size={18}/>Add vehicle</button>}</div>
-<div className="grid grid-cols-2 gap-3 xl:grid-cols-4">{cards.map(([label,value,Icon],index)=><div className="panel p-4 lg:p-5" key={label}><div className="flex items-center justify-between gap-2"><span className="text-xs text-slate-400">{label}</span><Icon size={17} className={index===2?'text-amber-400':'text-blue-400'}/></div><p className="mt-4 break-words text-xl font-semibold tracking-tight lg:text-2xl">{value??'—'}</p><p className="mt-2 text-[10px] uppercase tracking-widest text-slate-500">{index===3?'INR · all available units':'Across your collection'}</p></div>)}</div>
-{notice&&<div role="status" className="rounded-xl border border-emerald-400/20 bg-emerald-400/10 px-5 py-3 text-sm text-emerald-300">{notice}</div>}
-<section className="panel p-4 lg:p-5" aria-label="Search inventory"><div className="mb-4 flex items-center gap-2 text-sm font-medium"><SlidersHorizontal size={17} className="text-blue-400"/>Refine your search<span className="ml-auto text-xs font-normal text-slate-500">Find exactly what moves you</span></div><form onSubmit={e=>{e.preventDefault();setPage(1);setQuery(Object.fromEntries(Object.entries(filters).filter(([,v])=>v!=='')));}}><div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">{(['make','model','category','minPrice','maxPrice'] as const).map(key=><label className="field text-xs" key={key}>{({make:'Make',model:'Model',category:'Category',minPrice:'Minimum price',maxPrice:'Maximum price'})[key]}<input placeholder={key.includes('Price')?'₹ Any':'Any '+key} value={filters[key]??''} onChange={e=>setFilters({...filters,[key]:e.target.value})} inputMode={key.includes('Price')?'decimal':undefined}/></label>)}<label className="field text-xs">Sort by<select value={filters.sort??'newest'} onChange={e=>setFilters({...filters,sort:e.target.value})}><option value="newest">Recently added</option><option value="priceAsc">Price: low to high</option><option value="priceDesc">Price: high to low</option><option value="make">Make: A to Z</option></select></label></div><div className="mt-4 flex items-center gap-4"><button className="primary py-2 text-xs"><Search size={15}/>Apply filters</button><button type="button" className="text-xs text-slate-400 hover:text-white" onClick={()=>{setFilters({});setQuery({});setPage(1);}}>Clear filters</button></div></form></section>
-<div className="flex items-center justify-between"><div className="flex items-center gap-3"><h2 className="text-lg font-semibold">{management?'Your vehicles':'Available collection'}</h2><span className="rounded-full bg-slate-800 px-2.5 py-1 text-xs text-slate-400">{inventory.data?.total??'…'} vehicles</span></div><div className="flex gap-1 rounded-lg border border-slate-800 p-1"><button className={'icon-button '+(view==='grid'?'bg-slate-700':'')} aria-label="Grid view" aria-pressed={view==='grid'} onClick={()=>setView('grid')}><LayoutGrid size={16}/></button><button className={'icon-button '+(view==='list'?'bg-slate-700':'')} aria-label="List view" aria-pressed={view==='list'} onClick={()=>setView('list')}><List size={16}/></button></div></div>
-{inventory.isPending?<div aria-label="Loading inventory" className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">{[1,2,3].map(n=><div key={n} className="panel h-80 animate-pulse bg-slate-800/50"/>)}</div>:inventory.isError?<div role="alert" className="error">{inventory.error.message}<button className="ml-4 underline" onClick={()=>void inventory.refetch()}>Try again</button></div>:inventory.data.items.length===0?<div className="panel p-16 text-center"><Search className="mx-auto mb-5 text-slate-500"/><h3 className="text-xl">No vehicles found</h3><p className="mt-3 text-sm text-slate-400">Try adjusting your filters to explore more of the collection.</p></div>:<div className={view==='grid'?'grid gap-5 md:grid-cols-2 xl:grid-cols-3':'grid gap-4'}>{inventory.data.items.map(v=><article key={v.id} className={'panel group overflow-hidden '+(view==='list'?'md:grid md:grid-cols-[260px_1fr]':'')}><div className="relative bg-gradient-to-br from-[#1b2c42] to-[#111c2c] px-4 pb-2 pt-9"><span className="absolute left-4 top-4 rounded-md border border-white/10 bg-slate-950/30 px-2 py-1 text-[10px] uppercase tracking-widest text-slate-300">{v.category}</span><span className={'absolute right-4 top-4 flex items-center gap-1.5 text-[10px] '+(v.quantity?'text-emerald-300':'text-slate-400')}><span className={'h-1.5 w-1.5 rounded-full '+(v.quantity?'bg-emerald-400':'bg-slate-500')}/>{v.quantity?'In stock':'Sold out'}</span><CarArt category={v.category}/></div><div className="p-5"><div className="flex items-start justify-between gap-3"><div><p className="text-[10px] uppercase tracking-[.18em] text-slate-500">{v.make}</p><h3 className="mt-1 text-lg font-semibold">{v.make} {v.model}</h3></div><button className="icon-button" aria-label={'View '+v.make+' '+v.model} onClick={()=>open('detail',v)}><ArrowUpRight size={18}/></button></div><div className="mt-5 flex items-baseline justify-between gap-2"><p className="text-xl font-semibold tracking-tight">{money(v.price)}</p><p className="text-xs text-slate-400">{v.quantity} available</p></div><div className="mt-5 border-t border-slate-800 pt-4"><button aria-label={v.quantity?'Purchase '+v.make+' '+v.model:'Out of stock'} disabled={!v.quantity} className="secondary w-full" onClick={()=>open('purchase',v)}>{v.quantity?'Explore & purchase':'Out of stock'}{v.quantity>0&&<ArrowUpRight size={16}/>}</button>{admin&&<div className="mt-3 flex justify-between gap-2"><button className="admin-button" aria-label={'Edit '+v.make+' '+v.model} onClick={()=>open('edit',v)}><Pencil size={13}/>Edit</button><button className="admin-button" aria-label={'Restock '+v.make+' '+v.model} onClick={()=>open('restock',v)}><RefreshCw size={13}/>Restock</button><button className="admin-button text-rose-300" aria-label={'Delete '+v.make+' '+v.model} onClick={()=>open('delete',v)}><Trash2 size={13}/>Delete</button></div>}</div></div></article>)}</div>}
-{inventory.data&&inventory.data.totalPages>1&&<div className="flex items-center justify-center gap-5"><button className="icon-button" aria-label="Previous page" disabled={page===1} onClick={()=>setPage(page-1)}><ChevronLeft/></button><span className="text-sm text-slate-400">Page {page} of {inventory.data.totalPages}</span><button className="icon-button" aria-label="Next page" disabled={page>=inventory.data.totalPages} onClick={()=>setPage(page+1)}><ChevronRight/></button></div>}
-<footer className="flex flex-wrap justify-between gap-2 border-t border-slate-800 pt-6 text-[11px] text-slate-500"><span>AUTOVAULT · A curated drive, every time.</span><span>All prices in INR · Vehicle illustrations are representative</span></footer>
-{action&&<Modal title={action.type==='add'?'Add vehicle':action.type==='edit'?'Edit vehicle':action.type==='purchase'?'Make it yours.':action.type==='restock'?'Restock vehicle':action.type==='delete'?'Delete this vehicle?':action.vehicle!.make+' '+action.vehicle!.model} onClose={close}>{action.type==='add'||action.type==='edit'?<VehicleForm vehicle={action.vehicle} onSave={save} pending={mutation.isPending} error={mutation.error?.message}/>:<div className="space-y-5">{action.vehicle&&<><CarArt category={action.vehicle.category}/><div className="flex justify-between"><div><h3 className="font-semibold">{action.vehicle.make} {action.vehicle.model}</h3><p className="mt-1 text-sm text-slate-400">{action.vehicle.category} · {action.vehicle.quantity} available</p></div><p className="font-semibold">{money(action.vehicle.price)}</p></div></>}{(action.type==='purchase'||action.type==='restock')&&<label className="field">Quantity<input type="number" min="1" max={action.type==='purchase'?action.vehicle!.quantity:2147483647} value={quantity} onChange={e=>setQuantity(Number(e.target.value))}/></label>}{action.type==='purchase'&&<div className="flex justify-between rounded-lg bg-slate-800 p-4"><span>Total · INR</span><strong>{Number.isSafeInteger(quantity)&&quantity>0?money(totalPrice(action.vehicle!.price,quantity)):'—'}</strong></div>}{action.type==='delete'&&<p className="text-sm text-slate-400">This removes the listing permanently. Vehicles with purchase history cannot be deleted.</p>}{(mutation.error||localError)&&<p role="alert" className="error">{mutation.error?.message??localError}</p>}{action.type==='detail'?<button className="primary w-full" disabled={!action.vehicle!.quantity} onClick={()=>open('purchase',action.vehicle)}>Purchase vehicle</button>:<button className="primary w-full" disabled={mutation.isPending} onClick={()=>{if(action.type!=='delete'&&(!Number.isInteger(quantity)||quantity<1||(action.type==='purchase'&&quantity>action.vehicle!.quantity))){setLocalError('Enter a valid available quantity');return;}mutation.mutate({path:'/vehicles/'+action.vehicle!.id+(action.type==='delete'?'':'/'+action.type),method:action.type==='delete'?'DELETE':'POST',body:action.type==='delete'?undefined:{quantity}});}}>{mutation.isPending?'Processing…':action.type==='purchase'?'Confirm purchase':action.type==='restock'?'Confirm restock':'Confirm delete'}</button>}</div>}</Modal>}
-</div>;}
+import { useState, useCallback } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  Plus,
+  Search,
+  SlidersHorizontal,
+  ArrowUpRight,
+  CarFront,
+  Boxes,
+  TriangleAlert,
+  IndianRupee,
+  LayoutGrid,
+  List,
+  RefreshCw,
+  Pencil,
+  Trash2,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
+import { useAuth } from "../contexts/Auth";
+import { api, money, totalPrice } from "../services/api";
+import type { Vehicle, Inventory, Summary } from "../types";
+import { CarArt } from "../components/CarArt";
+import { Modal } from "../components/Modal";
+import { VehicleForm, type VehicleValues } from "../features/VehicleForm";
+type Action = {
+  type: "purchase" | "edit" | "delete" | "restock" | "detail" | "add";
+  vehicle?: Vehicle;
+};
+export function InventoryPage({
+  management = false,
+}: {
+  management?: boolean;
+}) {
+  const { session } = useAuth();
+  const token = session!.token;
+  const admin = session!.user.role === "ADMIN";
+  const client = useQueryClient();
+  const [filters, setFilters] = useState<Record<string, string>>({});
+  const [query, setQuery] = useState<Record<string, string>>({});
+  const [page, setPage] = useState(1);
+  const [view, setView] = useState<"grid" | "list">("grid");
+  const [action, setAction] = useState<Action | null>(null);
+  const [quantity, setQuantity] = useState(1);
+  const [notice, setNotice] = useState("");
+  const [localError, setLocalError] = useState("");
+  const close = useCallback(() => setAction(null), []);
+  const params = new URLSearchParams({
+    ...query,
+    page: String(page),
+    pageSize: "9",
+  }).toString();
+  const inventory = useQuery({
+    queryKey: ["inventory", params],
+    queryFn: () => api<Inventory>("/vehicles/search?" + params, token),
+  });
+  const summary = useQuery({
+    queryKey: ["summary"],
+    queryFn: () => api<Summary>("/vehicles/summary", token),
+  });
+  const mutation = useMutation({
+    mutationFn: ({
+      path,
+      body,
+      method,
+    }: {
+      path: string;
+      body?: unknown;
+      method?: string;
+    }) => api(path, token, body, method),
+    onSuccess: () => {
+      setNotice(
+        action?.type === "purchase"
+          ? "Purchase confirmed. Your vehicle is reserved."
+          : "Inventory updated successfully.",
+      );
+      setAction(null);
+      void client.invalidateQueries({ queryKey: ["inventory"] });
+      void client.invalidateQueries({ queryKey: ["summary"] });
+    },
+  });
+  function open(type: Action["type"], vehicle?: Vehicle) {
+    setAction({ type, vehicle });
+    setQuantity(1);
+    setNotice("");
+    setLocalError("");
+    mutation.reset();
+  }
+  function save(values: VehicleValues) {
+    mutation.mutate({
+      path:
+        "/vehicles" + (action?.type === "edit" ? "/" + action.vehicle!.id : ""),
+      body: values,
+      method: action?.type === "edit" ? "PUT" : "POST",
+    });
+  }
+  const stats = summary.data;
+  const cards = [
+    ["Vehicle listings", stats?.listings, CarFront],
+    ["Units in stock", stats?.units, Boxes],
+    ["Out of stock", stats?.outOfStock, TriangleAlert],
+    ["Inventory value", stats ? money(stats.value) : undefined, IndianRupee],
+  ] as const;
+  return (
+    <div className="space-y-8">
+      <div className="flex flex-wrap items-end justify-between gap-5">
+        <div>
+          <p className="eyebrow">
+            {management ? "ADMIN WORKSPACE" : "THE AUTOVAULT COLLECTION"}
+          </p>
+          <h1 className="mt-2 text-3xl font-semibold tracking-tight lg:text-4xl">
+            {management ? "Inventory management" : "Find your next chapter."}
+          </h1>
+          <p className="mt-3 text-sm text-slate-400">
+            {management
+              ? "Keep your collection current, down to the last vehicle."
+              : "Explore exceptional vehicles. Make your next move."}
+          </p>
+        </div>
+        {admin && (
+          <button className="primary" onClick={() => open("add")}>
+            <Plus size={18} />
+            Add vehicle
+          </button>
+        )}
+      </div>
+      <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
+        {cards.map(([label, value, Icon], index) => (
+          <div className="panel p-4 lg:p-5" key={label}>
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-xs text-slate-400">{label}</span>
+              <Icon
+                size={17}
+                className={index === 2 ? "text-amber-400" : "text-blue-400"}
+              />
+            </div>
+            <p className="mt-4 break-words text-xl font-semibold tracking-tight lg:text-2xl">
+              {value ?? "—"}
+            </p>
+            <p className="mt-2 text-[10px] uppercase tracking-widest text-slate-500">
+              {index === 3
+                ? "INR · all available units"
+                : "Across your collection"}
+            </p>
+          </div>
+        ))}
+      </div>
+      {notice && (
+        <div
+          role="status"
+          className="rounded-xl border border-emerald-400/20 bg-emerald-400/10 px-5 py-3 text-sm text-emerald-300"
+        >
+          {notice}
+        </div>
+      )}
+      <section className="panel p-4 lg:p-5" aria-label="Search inventory">
+        <div className="mb-4 flex items-center gap-2 text-sm font-medium">
+          <SlidersHorizontal size={17} className="text-blue-400" />
+          Refine your search
+          <span className="ml-auto text-xs font-normal text-slate-500">
+            Find exactly what moves you
+          </span>
+        </div>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            setPage(1);
+            setQuery(
+              Object.fromEntries(
+                Object.entries(filters).filter(([, v]) => v !== ""),
+              ),
+            );
+          }}
+        >
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
+            {(
+              ["make", "model", "category", "minPrice", "maxPrice"] as const
+            ).map((key) => (
+              <label className="field text-xs" key={key}>
+                {
+                  {
+                    make: "Make",
+                    model: "Model",
+                    category: "Category",
+                    minPrice: "Minimum price",
+                    maxPrice: "Maximum price",
+                  }[key]
+                }
+                <input
+                  placeholder={key.includes("Price") ? "₹ Any" : "Any " + key}
+                  value={filters[key] ?? ""}
+                  onChange={(e) =>
+                    setFilters({ ...filters, [key]: e.target.value })
+                  }
+                  inputMode={key.includes("Price") ? "decimal" : undefined}
+                />
+              </label>
+            ))}
+            <label className="field text-xs">
+              Sort by
+              <select
+                value={filters.sort ?? "newest"}
+                onChange={(e) =>
+                  setFilters({ ...filters, sort: e.target.value })
+                }
+              >
+                <option value="newest">Recently added</option>
+                <option value="priceAsc">Price: low to high</option>
+                <option value="priceDesc">Price: high to low</option>
+                <option value="make">Make: A to Z</option>
+              </select>
+            </label>
+          </div>
+          <div className="mt-4 flex items-center gap-4">
+            <button className="primary py-2 text-xs">
+              <Search size={15} />
+              Apply filters
+            </button>
+            <button
+              type="button"
+              className="text-xs text-slate-400 hover:text-white"
+              onClick={() => {
+                setFilters({});
+                setQuery({});
+                setPage(1);
+              }}
+            >
+              Clear filters
+            </button>
+          </div>
+        </form>
+      </section>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <h2 className="text-lg font-semibold">
+            {management ? "Your vehicles" : "Available collection"}
+          </h2>
+          <span className="rounded-full bg-slate-800 px-2.5 py-1 text-xs text-slate-400">
+            {inventory.data?.total ?? "…"} vehicles
+          </span>
+        </div>
+        <div className="flex gap-1 rounded-lg border border-slate-800 p-1">
+          <button
+            className={"icon-button " + (view === "grid" ? "bg-slate-700" : "")}
+            aria-label="Grid view"
+            aria-pressed={view === "grid"}
+            onClick={() => setView("grid")}
+          >
+            <LayoutGrid size={16} />
+          </button>
+          <button
+            className={"icon-button " + (view === "list" ? "bg-slate-700" : "")}
+            aria-label="List view"
+            aria-pressed={view === "list"}
+            onClick={() => setView("list")}
+          >
+            <List size={16} />
+          </button>
+        </div>
+      </div>
+      {inventory.isPending ? (
+        <div
+          aria-label="Loading inventory"
+          className="grid gap-5 md:grid-cols-2 xl:grid-cols-3"
+        >
+          {[1, 2, 3].map((n) => (
+            <div key={n} className="panel h-80 animate-pulse bg-slate-800/50" />
+          ))}
+        </div>
+      ) : inventory.isError ? (
+        <div role="alert" className="error">
+          {inventory.error.message}
+          <button
+            className="ml-4 underline"
+            onClick={() => void inventory.refetch()}
+          >
+            Try again
+          </button>
+        </div>
+      ) : inventory.data.items.length === 0 ? (
+        <div className="panel p-16 text-center">
+          <Search className="mx-auto mb-5 text-slate-500" />
+          <h3 className="text-xl">No vehicles found</h3>
+          <p className="mt-3 text-sm text-slate-400">
+            Try adjusting your filters to explore more of the collection.
+          </p>
+        </div>
+      ) : (
+        <div
+          className={
+            view === "grid"
+              ? "grid gap-5 md:grid-cols-2 xl:grid-cols-3"
+              : "grid gap-4"
+          }
+        >
+          {inventory.data.items.map((v) => (
+            <article
+              key={v.id}
+              className={
+                "panel group overflow-hidden " +
+                (view === "list" ? "md:grid md:grid-cols-[260px_1fr]" : "")
+              }
+            >
+              <div className="relative bg-gradient-to-br from-[#1b2c42] to-[#111c2c] px-4 pb-2 pt-9">
+                <span className="absolute left-4 top-4 rounded-md border border-white/10 bg-slate-950/30 px-2 py-1 text-[10px] uppercase tracking-widest text-slate-300">
+                  {v.category}
+                </span>
+                <span
+                  className={
+                    "absolute right-4 top-4 flex items-center gap-1.5 text-[10px] " +
+                    (v.quantity ? "text-emerald-300" : "text-slate-400")
+                  }
+                >
+                  <span
+                    className={
+                      "h-1.5 w-1.5 rounded-full " +
+                      (v.quantity ? "bg-emerald-400" : "bg-slate-500")
+                    }
+                  />
+                  {v.quantity ? "In stock" : "Sold out"}
+                </span>
+                <CarArt category={v.category} />
+              </div>
+              <div className="p-5">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="text-[10px] uppercase tracking-[.18em] text-slate-500">
+                      {v.make}
+                    </p>
+                    <h3 className="mt-1 text-lg font-semibold">
+                      {v.make} {v.model}
+                    </h3>
+                  </div>
+                  <button
+                    className="icon-button"
+                    aria-label={"View " + v.make + " " + v.model}
+                    onClick={() => open("detail", v)}
+                  >
+                    <ArrowUpRight size={18} />
+                  </button>
+                </div>
+                <div className="mt-5 flex items-baseline justify-between gap-2">
+                  <p className="text-xl font-semibold tracking-tight">
+                    {money(v.price)}
+                  </p>
+                  <p className="text-xs text-slate-400">
+                    {v.quantity} available
+                  </p>
+                </div>
+                <div className="mt-5 border-t border-slate-800 pt-4">
+                  <button
+                    aria-label={
+                      v.quantity
+                        ? "Purchase " + v.make + " " + v.model
+                        : "Out of stock"
+                    }
+                    disabled={!v.quantity}
+                    className="secondary w-full"
+                    onClick={() => open("purchase", v)}
+                  >
+                    {v.quantity ? "Explore & purchase" : "Out of stock"}
+                    {v.quantity > 0 && <ArrowUpRight size={16} />}
+                  </button>
+                  {admin && (
+                    <div className="mt-3 flex justify-between gap-2">
+                      <button
+                        className="admin-button"
+                        aria-label={"Edit " + v.make + " " + v.model}
+                        onClick={() => open("edit", v)}
+                      >
+                        <Pencil size={13} />
+                        Edit
+                      </button>
+                      <button
+                        className="admin-button"
+                        aria-label={"Restock " + v.make + " " + v.model}
+                        onClick={() => open("restock", v)}
+                      >
+                        <RefreshCw size={13} />
+                        Restock
+                      </button>
+                      <button
+                        className="admin-button text-rose-300"
+                        aria-label={"Delete " + v.make + " " + v.model}
+                        onClick={() => open("delete", v)}
+                      >
+                        <Trash2 size={13} />
+                        Delete
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      )}
+      {inventory.data && inventory.data.totalPages > 1 && (
+        <div className="flex items-center justify-center gap-5">
+          <button
+            className="icon-button"
+            aria-label="Previous page"
+            disabled={page === 1}
+            onClick={() => setPage(page - 1)}
+          >
+            <ChevronLeft />
+          </button>
+          <span className="text-sm text-slate-400">
+            Page {page} of {inventory.data.totalPages}
+          </span>
+          <button
+            className="icon-button"
+            aria-label="Next page"
+            disabled={page >= inventory.data.totalPages}
+            onClick={() => setPage(page + 1)}
+          >
+            <ChevronRight />
+          </button>
+        </div>
+      )}
+      <footer className="flex flex-wrap justify-between gap-2 border-t border-slate-800 pt-6 text-[11px] text-slate-500">
+        <span>AUTOVAULT · A curated drive, every time.</span>
+        <span>
+          All prices in INR · Vehicle illustrations are representative
+        </span>
+      </footer>
+      {action && (
+        <Modal
+          title={
+            action.type === "add"
+              ? "Add vehicle"
+              : action.type === "edit"
+                ? "Edit vehicle"
+                : action.type === "purchase"
+                  ? "Make it yours."
+                  : action.type === "restock"
+                    ? "Restock vehicle"
+                    : action.type === "delete"
+                      ? "Delete this vehicle?"
+                      : action.vehicle!.make + " " + action.vehicle!.model
+          }
+          onClose={close}
+        >
+          {action.type === "add" || action.type === "edit" ? (
+            <VehicleForm
+              vehicle={action.vehicle}
+              onSave={save}
+              pending={mutation.isPending}
+              error={mutation.error?.message}
+            />
+          ) : (
+            <div className="space-y-5">
+              {action.vehicle && (
+                <>
+                  <CarArt category={action.vehicle.category} />
+                  <div className="flex justify-between">
+                    <div>
+                      <h3 className="font-semibold">
+                        {action.vehicle.make} {action.vehicle.model}
+                      </h3>
+                      <p className="mt-1 text-sm text-slate-400">
+                        {action.vehicle.category} · {action.vehicle.quantity}{" "}
+                        available
+                      </p>
+                    </div>
+                    <p className="font-semibold">
+                      {money(action.vehicle.price)}
+                    </p>
+                  </div>
+                </>
+              )}
+              {(action.type === "purchase" || action.type === "restock") && (
+                <label className="field">
+                  Quantity
+                  <input
+                    type="number"
+                    min="1"
+                    max={
+                      action.type === "purchase"
+                        ? action.vehicle!.quantity
+                        : 2147483647
+                    }
+                    value={quantity}
+                    onChange={(e) => setQuantity(Number(e.target.value))}
+                  />
+                </label>
+              )}
+              {action.type === "purchase" && (
+                <div className="flex justify-between rounded-lg bg-slate-800 p-4">
+                  <span>Total · INR</span>
+                  <strong>
+                    {Number.isSafeInteger(quantity) && quantity > 0
+                      ? money(totalPrice(action.vehicle!.price, quantity))
+                      : "—"}
+                  </strong>
+                </div>
+              )}
+              {action.type === "delete" && (
+                <p className="text-sm text-slate-400">
+                  This removes the listing permanently. Vehicles with purchase
+                  history cannot be deleted.
+                </p>
+              )}
+              {(mutation.error || localError) && (
+                <p role="alert" className="error">
+                  {mutation.error?.message ?? localError}
+                </p>
+              )}
+              {action.type === "detail" ? (
+                <button
+                  className="primary w-full"
+                  disabled={!action.vehicle!.quantity}
+                  onClick={() => open("purchase", action.vehicle)}
+                >
+                  Purchase vehicle
+                </button>
+              ) : (
+                <button
+                  className="primary w-full"
+                  disabled={mutation.isPending}
+                  onClick={() => {
+                    if (
+                      action.type !== "delete" &&
+                      (!Number.isInteger(quantity) ||
+                        quantity < 1 ||
+                        (action.type === "purchase" &&
+                          quantity > action.vehicle!.quantity))
+                    ) {
+                      setLocalError("Enter a valid available quantity");
+                      return;
+                    }
+                    mutation.mutate({
+                      path:
+                        "/vehicles/" +
+                        action.vehicle!.id +
+                        (action.type === "delete" ? "" : "/" + action.type),
+                      method: action.type === "delete" ? "DELETE" : "POST",
+                      body: action.type === "delete" ? undefined : { quantity },
+                    });
+                  }}
+                >
+                  {mutation.isPending
+                    ? "Processing…"
+                    : action.type === "purchase"
+                      ? "Confirm purchase"
+                      : action.type === "restock"
+                        ? "Confirm restock"
+                        : "Confirm delete"}
+                </button>
+              )}
+            </div>
+          )}
+        </Modal>
+      )}
+    </div>
+  );
+}

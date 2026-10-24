@@ -1,24 +1,168 @@
-import { beforeEach, afterAll, it, expect } from 'vitest';
-import request from 'supertest';
-import jwt from 'jsonwebtoken';
-import { randomUUID } from 'node:crypto';
-import { PrismaClient } from '@prisma/client';
-import { app } from '../src/app.js';
-const db=new PrismaClient();
-let admin:string,user:string;
-const vehicle={make:'Tata',model:'Harrier',category:'SUV',price:'1800000.00',quantity:3};
-const token=(id:string,expiresIn:number=900)=>jwt.sign({sub:id},process.env.JWT_SECRET!,{expiresIn,issuer:'autovault',audience:'autovault-web'});
-beforeEach(async()=>{await db.purchase.deleteMany();await db.vehicle.deleteMany();await db.user.deleteMany();const a=await db.user.create({data:{email:'admin@test.com',passwordHash:'unused',role:'ADMIN'}});const u=await db.user.create({data:{email:'user@test.com',passwordHash:'unused'}});admin=token(a.id);user=token(u.id);});
-afterAll(()=>db.$disconnect());
-it('requires JWT',async()=>{expect((await request(app).get('/api/vehicles')).status).toBe(401);});
-it.each(['invalid',jwt.sign({sub:randomUUID()},'wrong-secret'),jwt.sign({sub:randomUUID()},'test-only-secret-not-for-production-123456789',{expiresIn:-1})])('rejects invalid or expired tokens',async t=>{expect((await request(app).get('/api/vehicles').auth(t,{type:'bearer'})).status).toBe(401);});
-it('admin creates a vehicle',async()=>{const r=await request(app).post('/api/vehicles').auth(admin,{type:'bearer'}).send(vehicle);expect(r.status).toBe(201);expect(r.body.price).toBe('1800000');expect(r.body.quantity).toBe(3);});
-it('forbids USER creation',async()=>{expect((await request(app).post('/api/vehicles').auth(user,{type:'bearer'}).send(vehicle)).status).toBe(403);});
-it.each([{price:'-1'},{price:'1.001'},{price:'NaN'},{price:0},{quantity:-1},{quantity:1.5},{make:''},{model:''},{category:''},{unsafe:true}])('rejects invalid input %j',async patch=>{expect((await request(app).post('/api/vehicles').auth(admin,{type:'bearer'}).send({...vehicle,...patch})).status).toBe(400);});
-it('requires all fields',async()=>{expect((await request(app).post('/api/vehicles').auth(admin,{type:'bearer'}).send({})).status).toBe(400);});
-it('lists inventory including sold out',async()=>{await db.vehicle.create({data:{...vehicle,quantity:0}});const r=await request(app).get('/api/vehicles').auth(user,{type:'bearer'});expect(r.status).toBe(200);expect(r.body.items[0].quantity).toBe(0);expect(r.body.total).toBe(1);});
-it('updates a vehicle',async()=>{const v=await db.vehicle.create({data:vehicle});const r=await request(app).put(`/api/vehicles/${v.id}`).auth(admin,{type:'bearer'}).send({...vehicle,model:'Safari'});expect(r.status).toBe(200);expect(r.body.model).toBe('Safari');});
-it('returns 404 for absent update',async()=>{expect((await request(app).put(`/api/vehicles/${randomUUID()}`).auth(admin,{type:'bearer'}).send(vehicle)).status).toBe(404);});
-it('deletes as admin',async()=>{const v=await db.vehicle.create({data:vehicle});expect((await request(app).delete(`/api/vehicles/${v.id}`).auth(admin,{type:'bearer'})).status).toBe(200);expect(await db.vehicle.count()).toBe(0);});
-it('forbids USER deletion and update',async()=>{const v=await db.vehicle.create({data:vehicle});expect((await request(app).delete(`/api/vehicles/${v.id}`).auth(user,{type:'bearer'})).status).toBe(403);expect((await request(app).put(`/api/vehicles/${v.id}`).auth(user,{type:'bearer'}).send(vehicle)).status).toBe(403);});
-it('rejects malformed UUID',async()=>{expect((await request(app).delete('/api/vehicles/bad').auth(admin,{type:'bearer'})).status).toBe(400);});
+import { beforeEach, afterAll, it, expect } from "vitest";
+import request from "supertest";
+import jwt from "jsonwebtoken";
+import { randomUUID } from "node:crypto";
+import { PrismaClient } from "@prisma/client";
+import { app } from "../src/app.js";
+const db = new PrismaClient();
+let admin: string, user: string;
+const vehicle = {
+  make: "Tata",
+  model: "Harrier",
+  category: "SUV",
+  price: "1800000.00",
+  quantity: 3,
+};
+const token = (id: string, expiresIn: number = 900) =>
+  jwt.sign({ sub: id }, process.env.JWT_SECRET!, {
+    expiresIn,
+    issuer: "autovault",
+    audience: "autovault-web",
+  });
+beforeEach(async () => {
+  await db.purchase.deleteMany();
+  await db.vehicle.deleteMany();
+  await db.user.deleteMany();
+  const a = await db.user.create({
+    data: { email: "admin@test.com", passwordHash: "unused", role: "ADMIN" },
+  });
+  const u = await db.user.create({
+    data: { email: "user@test.com", passwordHash: "unused" },
+  });
+  admin = token(a.id);
+  user = token(u.id);
+});
+afterAll(() => db.$disconnect());
+it("requires JWT", async () => {
+  expect((await request(app).get("/api/vehicles")).status).toBe(401);
+});
+it.each([
+  "invalid",
+  jwt.sign({ sub: randomUUID() }, "wrong-secret"),
+  jwt.sign(
+    { sub: randomUUID() },
+    "test-only-secret-not-for-production-123456789",
+    { expiresIn: -1 },
+  ),
+])("rejects invalid or expired tokens", async (t) => {
+  expect(
+    (await request(app).get("/api/vehicles").auth(t, { type: "bearer" }))
+      .status,
+  ).toBe(401);
+});
+it("admin creates a vehicle", async () => {
+  const r = await request(app)
+    .post("/api/vehicles")
+    .auth(admin, { type: "bearer" })
+    .send(vehicle);
+  expect(r.status).toBe(201);
+  expect(r.body.price).toBe("1800000");
+  expect(r.body.quantity).toBe(3);
+});
+it("forbids USER creation", async () => {
+  expect(
+    (
+      await request(app)
+        .post("/api/vehicles")
+        .auth(user, { type: "bearer" })
+        .send(vehicle)
+    ).status,
+  ).toBe(403);
+});
+it.each([
+  { price: "-1" },
+  { price: "1.001" },
+  { price: "NaN" },
+  { price: 0 },
+  { quantity: -1 },
+  { quantity: 1.5 },
+  { make: "" },
+  { model: "" },
+  { category: "" },
+  { unsafe: true },
+])("rejects invalid input %j", async (patch) => {
+  expect(
+    (
+      await request(app)
+        .post("/api/vehicles")
+        .auth(admin, { type: "bearer" })
+        .send({ ...vehicle, ...patch })
+    ).status,
+  ).toBe(400);
+});
+it("requires all fields", async () => {
+  expect(
+    (
+      await request(app)
+        .post("/api/vehicles")
+        .auth(admin, { type: "bearer" })
+        .send({})
+    ).status,
+  ).toBe(400);
+});
+it("lists inventory including sold out", async () => {
+  await db.vehicle.create({ data: { ...vehicle, quantity: 0 } });
+  const r = await request(app)
+    .get("/api/vehicles")
+    .auth(user, { type: "bearer" });
+  expect(r.status).toBe(200);
+  expect(r.body.items[0].quantity).toBe(0);
+  expect(r.body.total).toBe(1);
+});
+it("updates a vehicle", async () => {
+  const v = await db.vehicle.create({ data: vehicle });
+  const r = await request(app)
+    .put(`/api/vehicles/${v.id}`)
+    .auth(admin, { type: "bearer" })
+    .send({ ...vehicle, model: "Safari" });
+  expect(r.status).toBe(200);
+  expect(r.body.model).toBe("Safari");
+});
+it("returns 404 for absent update", async () => {
+  expect(
+    (
+      await request(app)
+        .put(`/api/vehicles/${randomUUID()}`)
+        .auth(admin, { type: "bearer" })
+        .send(vehicle)
+    ).status,
+  ).toBe(404);
+});
+it("deletes as admin", async () => {
+  const v = await db.vehicle.create({ data: vehicle });
+  expect(
+    (
+      await request(app)
+        .delete(`/api/vehicles/${v.id}`)
+        .auth(admin, { type: "bearer" })
+    ).status,
+  ).toBe(200);
+  expect(await db.vehicle.count()).toBe(0);
+});
+it("forbids USER deletion and update", async () => {
+  const v = await db.vehicle.create({ data: vehicle });
+  expect(
+    (
+      await request(app)
+        .delete(`/api/vehicles/${v.id}`)
+        .auth(user, { type: "bearer" })
+    ).status,
+  ).toBe(403);
+  expect(
+    (
+      await request(app)
+        .put(`/api/vehicles/${v.id}`)
+        .auth(user, { type: "bearer" })
+        .send(vehicle)
+    ).status,
+  ).toBe(403);
+});
+it("rejects malformed UUID", async () => {
+  expect(
+    (
+      await request(app)
+        .delete("/api/vehicles/bad")
+        .auth(admin, { type: "bearer" })
+    ).status,
+  ).toBe(400);
+});

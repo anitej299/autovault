@@ -1,2 +1,158 @@
-import {useState} from 'react';import {useForm} from 'react-hook-form';import {zodResolver} from '@hookform/resolvers/zod';import {z} from 'zod';import {Link,Navigate,useNavigate} from 'react-router-dom';import {ArrowUpRight,ShieldCheck,CarFront,ArrowRight} from 'lucide-react';import {useAuth} from '../contexts/Auth';import {api} from '../services/api';import type {Session} from '../types';import {CarArt} from '../components/CarArt';
-export function AuthPage({registering=false}:{registering?:boolean}){const {session,setSession}=useAuth();const navigate=useNavigate();const [error,setError]=useState('');const schema=z.object({email:z.string().trim().email('Enter a valid email address'),password:registering?z.string().min(12,'Use at least 12 characters').max(72).regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9])/,'Include upper/lowercase, a number and a symbol'):z.string().min(1,'Enter your password')});const form=useForm<{email:string;password:string}>({resolver:zodResolver(schema)});if(session)return <Navigate to="/inventory" replace/>;return <main className="min-h-screen lg:grid lg:grid-cols-[1.15fr_1fr]"><section className="relative flex min-h-[340px] flex-col justify-between overflow-hidden border-r border-white/5 bg-[#101e32] p-8 lg:p-14"><Link to="/login" className="brand"><CarFront className="text-blue-400"/>AutoVault<span className="ml-1 text-blue-400">.</span></Link><div className="relative z-10 mt-12"><p className="eyebrow">A better way to find your next drive</p><h1 className="mt-5 max-w-lg text-4xl font-semibold leading-tight tracking-tight lg:text-6xl">Great journeys<br/>start here<span className="text-blue-400">.</span></h1><p className="mt-5 max-w-md text-slate-400">A thoughtfully curated inventory. Clear pricing. Your next chapter, ready to drive.</p><div className="mx-auto mt-5 max-w-2xl"><CarArt large/></div></div><div className="mt-6 flex items-center gap-3 text-xs text-slate-400"><ShieldCheck size={18} className="text-blue-400"/> Transparent inventory. Confident decisions.<ArrowUpRight className="ml-auto" size={18}/></div><div className="pointer-events-none absolute -right-40 top-48 h-96 w-96 rounded-full bg-blue-500/10 blur-3xl"/></section><section className="flex items-center justify-center p-8 lg:p-16"><div className="w-full max-w-sm"><p className="eyebrow">YOUR AUTOMOTIVE COLLECTION</p><h2 className="mt-5 text-3xl font-semibold tracking-tight">{registering?'Your journey begins.':'Welcome back.'}</h2><p className="mt-3 text-sm text-slate-400">{registering?'Create an account to explore and purchase vehicles.':'Sign in to explore what’s waiting in your vault.'}</p><form noValidate onSubmit={form.handleSubmit(async values=>{setError('');try{setSession(await api<Session>('/auth/'+(registering?'register':'login'),undefined,values));navigate('/inventory');}catch(e){setError((e as Error).message);}})} className="mt-9 space-y-5"><label className="field">Email address<input autoComplete="email" type="email" placeholder="you@example.com" {...form.register('email')}/>{form.formState.errors.email&&<span className="field-error">{form.formState.errors.email.message}</span>}</label><label className="field">Password<input autoComplete={registering?'new-password':'current-password'} type="password" placeholder="Enter your password" {...form.register('password')}/>{form.formState.errors.password&&<span className="field-error">{form.formState.errors.password.message}</span>}</label>{registering&&<p className="text-xs leading-relaxed text-slate-400">12–72 characters with uppercase, lowercase, a number and a symbol.</p>}{error&&<p role="alert" className="error">{error}</p>}<button className="primary w-full" disabled={form.formState.isSubmitting}>{form.formState.isSubmitting?'Please wait…':registering?'Create account':'Sign in'}<ArrowRight size={17}/></button></form><p className="mt-7 text-center text-sm text-slate-400">{registering?'Already have an account?':'New to AutoVault?'} <Link className="text-blue-400 hover:text-blue-300" to={registering?'/login':'/register'}>{registering?'Sign in':'Create account'}</Link></p><p className="mt-12 text-center text-xs text-slate-500">Thoughtfully selected. Ready for the road.</p></div></section></main>;}
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import { ArrowUpRight, ShieldCheck, CarFront, ArrowRight } from "lucide-react";
+import { useAuth } from "../contexts/Auth";
+import { api } from "../services/api";
+import type { Session } from "../types";
+import { CarArt } from "../components/CarArt";
+export function AuthPage({ registering = false }: { registering?: boolean }) {
+  const { session, setSession } = useAuth();
+  const navigate = useNavigate();
+  const [error, setError] = useState("");
+  const schema = z.object({
+    email: z.string().trim().email("Enter a valid email address"),
+    password: registering
+      ? z
+          .string()
+          .min(12, "Use at least 12 characters")
+          .max(72)
+          .regex(
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9])/,
+            "Include upper/lowercase, a number and a symbol",
+          )
+      : z.string().min(1, "Enter your password"),
+  });
+  const form = useForm<{ email: string; password: string }>({
+    resolver: zodResolver(schema),
+  });
+  if (session) return <Navigate to="/inventory" replace />;
+  return (
+    <main className="min-h-screen lg:grid lg:grid-cols-[1.15fr_1fr]">
+      <section className="relative flex min-h-[340px] flex-col justify-between overflow-hidden border-r border-white/5 bg-[#101e32] p-8 lg:p-14">
+        <Link to="/login" className="brand">
+          <CarFront className="text-blue-400" />
+          AutoVault<span className="ml-1 text-blue-400">.</span>
+        </Link>
+        <div className="relative z-10 mt-12">
+          <p className="eyebrow">A better way to find your next drive</p>
+          <h1 className="mt-5 max-w-lg text-4xl font-semibold leading-tight tracking-tight lg:text-6xl">
+            Great journeys
+            <br />
+            start here<span className="text-blue-400">.</span>
+          </h1>
+          <p className="mt-5 max-w-md text-slate-400">
+            A thoughtfully curated inventory. Clear pricing. Your next chapter,
+            ready to drive.
+          </p>
+          <div className="mx-auto mt-5 max-w-2xl">
+            <CarArt large />
+          </div>
+        </div>
+        <div className="mt-6 flex items-center gap-3 text-xs text-slate-400">
+          <ShieldCheck size={18} className="text-blue-400" /> Transparent
+          inventory. Confident decisions.
+          <ArrowUpRight className="ml-auto" size={18} />
+        </div>
+        <div className="pointer-events-none absolute -right-40 top-48 h-96 w-96 rounded-full bg-blue-500/10 blur-3xl" />
+      </section>
+      <section className="flex items-center justify-center p-8 lg:p-16">
+        <div className="w-full max-w-sm">
+          <p className="eyebrow">YOUR AUTOMOTIVE COLLECTION</p>
+          <h2 className="mt-5 text-3xl font-semibold tracking-tight">
+            {registering ? "Your journey begins." : "Welcome back."}
+          </h2>
+          <p className="mt-3 text-sm text-slate-400">
+            {registering
+              ? "Create an account to explore and purchase vehicles."
+              : "Sign in to explore what’s waiting in your vault."}
+          </p>
+          <form
+            noValidate
+            onSubmit={form.handleSubmit(async (values) => {
+              setError("");
+              try {
+                setSession(
+                  await api<Session>(
+                    "/auth/" + (registering ? "register" : "login"),
+                    undefined,
+                    values,
+                  ),
+                );
+                navigate("/inventory");
+              } catch (e) {
+                setError((e as Error).message);
+              }
+            })}
+            className="mt-9 space-y-5"
+          >
+            <label className="field">
+              Email address
+              <input
+                autoComplete="email"
+                type="email"
+                placeholder="you@example.com"
+                {...form.register("email")}
+              />
+              {form.formState.errors.email && (
+                <span className="field-error">
+                  {form.formState.errors.email.message}
+                </span>
+              )}
+            </label>
+            <label className="field">
+              Password
+              <input
+                autoComplete={registering ? "new-password" : "current-password"}
+                type="password"
+                placeholder="Enter your password"
+                {...form.register("password")}
+              />
+              {form.formState.errors.password && (
+                <span className="field-error">
+                  {form.formState.errors.password.message}
+                </span>
+              )}
+            </label>
+            {registering && (
+              <p className="text-xs leading-relaxed text-slate-400">
+                12–72 characters with uppercase, lowercase, a number and a
+                symbol.
+              </p>
+            )}
+            {error && (
+              <p role="alert" className="error">
+                {error}
+              </p>
+            )}
+            <button
+              className="primary w-full"
+              disabled={form.formState.isSubmitting}
+            >
+              {form.formState.isSubmitting
+                ? "Please wait…"
+                : registering
+                  ? "Create account"
+                  : "Sign in"}
+              <ArrowRight size={17} />
+            </button>
+          </form>
+          <p className="mt-7 text-center text-sm text-slate-400">
+            {registering ? "Already have an account?" : "New to AutoVault?"}{" "}
+            <Link
+              className="text-blue-400 hover:text-blue-300"
+              to={registering ? "/login" : "/register"}
+            >
+              {registering ? "Sign in" : "Create account"}
+            </Link>
+          </p>
+          <p className="mt-12 text-center text-xs text-slate-500">
+            Thoughtfully selected. Ready for the road.
+          </p>
+        </div>
+      </section>
+    </main>
+  );
+}

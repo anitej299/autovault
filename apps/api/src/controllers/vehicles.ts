@@ -1,3 +1,44 @@
-import {findVehicles,inventorySummary} from '../repositories/search.js';import type {RequestHandler} from 'express';import {vehicles} from '../repositories/vehicles.js';import * as schema from '../validators/vehicles.js';export const create:RequestHandler=async(req,res)=>{res.status(201).json(await vehicles.create(schema.vehicle.parse(req.body)));};export const list:RequestHandler=async(req,res)=>{res.json(await findVehicles(schema.search.parse(req.query)));};export const update:RequestHandler=async(req,res)=>{res.json(await vehicles.update(schema.id.parse(req.params.id),schema.vehicle.parse(req.body)));};export const remove:RequestHandler=async(req,res)=>{await vehicles.remove(schema.id.parse(req.params.id));res.json({message:'Vehicle deleted'});};
-export const summary:RequestHandler=async(_req,res)=>{res.json(await inventorySummary());};
-import {purchaseVehicle,restockVehicle} from '../services/inventory.js';export const purchase:RequestHandler=async(req,res)=>{const input=schema.purchase.parse(req.body??{});res.status(201).json(await purchaseVehicle(schema.id.parse(req.params.id),res.locals.user.id,input.quantity));};export const restock:RequestHandler=async(req,res)=>{const input=schema.restock.parse(req.body);res.json(await restockVehicle(schema.id.parse(req.params.id),input.quantity));};
+import { findVehicles, inventorySummary } from "../repositories/search.js";
+import type { RequestHandler } from "express";
+import { vehicles } from "../repositories/vehicles.js";
+import * as schema from "../validators/vehicles.js";
+export const create: RequestHandler = async (req, res) => {
+  res.status(201).json(await vehicles.create(schema.vehicle.parse(req.body)));
+};
+export const list: RequestHandler = async (req, res) => {
+  res.json(await findVehicles(schema.search.parse(req.query)));
+};
+export const update: RequestHandler = async (req, res) => {
+  res.json(
+    await vehicles.update(
+      schema.id.parse(req.params.id),
+      schema.vehicle.parse(req.body),
+    ),
+  );
+};
+export const remove: RequestHandler = async (req, res) => {
+  await vehicles.remove(schema.id.parse(req.params.id));
+  res.json({ message: "Vehicle deleted" });
+};
+export const summary: RequestHandler = async (_req, res) => {
+  res.json(await inventorySummary());
+};
+import { purchaseVehicle, restockVehicle } from "../services/inventory.js";
+export const purchase: RequestHandler = async (req, res) => {
+  const input = schema.purchase.parse(req.body ?? {});
+  res
+    .status(201)
+    .json(
+      await purchaseVehicle(
+        schema.id.parse(req.params.id),
+        res.locals.user.id,
+        input.quantity,
+      ),
+    );
+};
+export const restock: RequestHandler = async (req, res) => {
+  const input = schema.restock.parse(req.body);
+  res.json(
+    await restockVehicle(schema.id.parse(req.params.id), input.quantity),
+  );
+};
