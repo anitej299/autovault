@@ -1,3 +1,4 @@
+import { useId } from "react";
 export function CarArt({
   category = "SUV",
   large = false,
@@ -5,6 +6,7 @@ export function CarArt({
   category?: string;
   large?: boolean;
 }) {
+  const gradientId = useId();
   const color =
     category === "Electric"
       ? "#5ab6ad"
@@ -25,7 +27,7 @@ export function CarArt({
       }
     >
       <defs>
-        <linearGradient id={"paint" + category} x2="0.3" y2="1">
+        <linearGradient id={gradientId} x2="0.3" y2="1">
           <stop stopColor="#e8f0fc" />
           <stop offset=".5" stopColor={color} />
           <stop offset="1" stopColor="#27374c" />
@@ -34,7 +36,7 @@ export function CarArt({
       <ellipse cx="324" cy="230" rx="250" ry="20" fill="#030712" opacity=".6" />
       <path
         d="M69 164 112 149 166 80 Q179 64 216 64 L390 69 Q414 73 449 118 L480 143 557 162 Q578 168 580 191 L572 215 68 215 56 188Z"
-        fill={"url(#paint" + category + ")"}
+        fill={"url(#" + gradientId + ")"}
         stroke="#a5bad5"
         strokeWidth="2"
       />

@@ -5,7 +5,7 @@
     "apps/*"
   ],
   "scripts": {
-    "dev": "concurrently -k \"npm run dev -w apps/api\" \"npm run dev -w apps/web\"",
+    "dev": "node scripts/dev.mjs",
     "build": "npm run build --workspaces",
     "typecheck": "npm run typecheck --workspaces",
     "lint": "eslint .",
@@ -15,7 +15,12 @@
     "db:migrate": "prisma migrate deploy --schema apps/api/prisma/schema.prisma",
     "db:seed": "npm run db:seed -w apps/api",
     "db:studio": "prisma studio --schema apps/api/prisma/schema.prisma",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "postinstall": "prisma generate --schema apps/api/prisma/schema.prisma",
+    "db:test:migrate": "node scripts/test-database.mjs",
+    "pretest:e2e": "npm run db:test:migrate && npm run build",
+    "pretest": "npm run db:test:migrate",
+    "pretest:coverage": "npm run db:test:migrate"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
@@ -26,7 +31,8 @@
     "prettier": "^3.6.2",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.46.0",
-    "vitest": "^5.0.5"
+    "vitest": "^5.0.5",
+    "vite": "7.3.7"
   },
   "engines": {
     "node": "^22.12.0 || ^24.0.0 || >=26.0.0"
