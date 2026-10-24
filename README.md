@@ -263,7 +263,9 @@ The main value of the assistance was iterating across database, API and UI bound
 
 ## Publish to GitHub
 
-No remote has been created or pushed. After reviewing the code and completing PROMPTS.md, create an empty **public** GitHub repository without generated starter files, then run:
+Public repository: [anitej299/autovault](https://github.com/anitej299/autovault). The original TDD history is preserved. PROMPTS.md still awaits the authentic conversation export/link.
+
+To publish a separate copy under your own account, create an empty public repository and run:
 
 ```sh
 git branch -M main
