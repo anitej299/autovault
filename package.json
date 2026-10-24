@@ -1,1 +1,38 @@
-{"name":"autovault","private":true,"workspaces":["apps/*"],"scripts":{"dev":"concurrently -k \"npm run dev -w apps/api\" \"npm run dev -w apps/web\"","build":"npm run build --workspaces","typecheck":"npm run typecheck --workspaces","lint":"eslint .","test":"npm run test --workspaces","test:coverage":"npm run test:coverage --workspaces","test:e2e":"playwright test","db:migrate":"npm run db:migrate -w apps/api","db:seed":"npm run db:seed -w apps/api","db:studio":"npm run db:studio -w apps/api"},"devDependencies":{"@eslint/js":"^9.39.0","typescript-eslint":"^8.46.0","eslint":"^9.39.0","prettier":"^3.6.2","concurrently":"^9.2.1","@playwright/test":"^1.56.1","typescript":"^5.9.3"}}
+{
+  "name": "autovault",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "concurrently -k \"npm run dev -w apps/api\" \"npm run dev -w apps/web\"",
+    "build": "npm run build --workspaces",
+    "typecheck": "npm run typecheck --workspaces",
+    "lint": "eslint .",
+    "test": "npm run test --workspaces",
+    "test:coverage": "npm run test:coverage --workspaces",
+    "test:e2e": "playwright test",
+    "db:migrate": "prisma migrate deploy --schema apps/api/prisma/schema.prisma",
+    "db:seed": "npm run db:seed -w apps/api",
+    "db:studio": "prisma studio --schema apps/api/prisma/schema.prisma",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@playwright/test": "^1.56.1",
+    "@vitest/coverage-v8": "^5.0.5",
+    "concurrently": "^9.2.1",
+    "eslint": "10.13.0",
+    "prettier": "^3.6.2",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.46.0",
+    "vitest": "^5.0.5"
+  },
+  "engines": {
+    "node": "^22.12.0 || ^24.0.0 || >=26.0.0"
+  },
+  "overrides": {
+    "deepmerge-ts": "8.0.0",
+    "postcss-selector-parser": "7.1.6"
+  }
+}
