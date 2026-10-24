@@ -11,3 +11,6 @@ work/
 
 # Machine-local npm cache location
 .npmrc
+
+# Exported submission artifacts
+/outputs/

@@ -1,0 +1,13 @@
+
+> test
+> vitest run
+
+
+ RUN  v5.0.5 D:/Codex/AutoVault/apps/web
+
+
+ Test Files  1 passed (1)
+      Tests  11 passed (11)
+   Start at  13:55:12
+   Duration  6.41s (tests 59%, environment 18%, import 11%, transform 7%, setup 5%)
+

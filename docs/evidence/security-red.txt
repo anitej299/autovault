@@ -1,0 +1,95 @@
+
+> test
+> vitest run tests/security.test.ts
+
+
+ RUN  v3.2.7 D:/Codex/AutoVault/apps/api
+
+stderr | tests/security.test.ts > rejects signed malformed JWT subjects without database errors
+Request failed 
+Invalid `db.user.findUnique()` invocation in
+D:\Codex\AutoVault\apps\api\src\middleware\auth.ts:2:522
+
+  1 import type {RequestHandler} from 'express';import jwt from 'jsonwebtoken';import {env} from '../config/env.js';import {db} from '../repositories/db.js';import {HttpError} from '../utils/errors.js';
+→ 2 export const requireAuth:RequestHandler=async(req,res,next)=>{const header=req.headers.authorization;if(!header?.startsWith('Bearer '))throw new HttpError(401,'Authentication required');let id:string;try{const decoded=jwt.verify(header.slice(7),env.JWT_SECRET,{algorithms:['HS256'],issuer:'autovault',audience:'autovault-web'});if(typeof decoded==='string'||typeof decoded.sub!=='string')throw new Error('Invalid token');id=decoded.sub;}catch{throw new HttpError(401,'Invalid or expired token');}const user=await db.user.findUnique(
+Inconsistent column data: Error creating UUID, invalid length: expected length 32 for simple format, found 3
+
+stderr | tests/security.test.ts > rejects oversized JSON with consistent status
+Request failed request entity too large
+
+ ❯ tests/security.test.ts (6 tests | 4 failed) 2212ms
+   × reports database health 53ms
+     → expected 404 to be 200 // Object.is equality
+   × returns consistent JSON 404 9ms
+     → Cannot read properties of undefined (reading 'message')
+   × rejects signed malformed JWT subjects without database errors 2094ms
+     → expected 500 to be 401 // Object.is equality
+   × rejects oversized JSON with consistent status 14ms
+     → expected 500 to be 413 // Object.is equality
+   ✓ uses security headers and explicit CORS 9ms
+   ✓ returns consistent malformed JSON error 31ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/security.test.ts > reports database health
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/security.test.ts:2:103
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  tests/security.test.ts > returns consistent JSON 404
+TypeError: Cannot read properties of undefined (reading 'message')
+ ❯ tests/security.test.ts:3:138
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  tests/security.test.ts > rejects signed malformed JWT subjects without database errors
+AssertionError: expected 500 to be 401 // Object.is equality
+
+- Expected
++ Received
+
+- 401
++ 500
+
+ ❯ tests/security.test.ts:4:259
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  tests/security.test.ts > rejects oversized JSON with consistent status
+AssertionError: expected 500 to be 413 // Object.is equality
+
+- Expected
++ Received
+
+- 413
++ 500
+
+ ❯ tests/security.test.ts:5:162
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 2 passed (6)
+   Start at  13:47:23
+   Duration  3.86s (transform 207ms, setup 28ms, collect 1.08s, tests 2.21s, environment 1ms, prepare 184ms)
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path D:\Codex\AutoVault\apps\api
+npm error workspace @autovault/api
+npm error location D:\Codex\AutoVault\apps\api
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run tests/security.test.ts

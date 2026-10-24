@@ -1,0 +1,18 @@
+
+> test
+> vitest run tests/auth.test.ts
+
+
+ RUN  v3.2.7 D:/Codex/AutoVault/apps/api
+
+ ✓ tests/auth.test.ts (7 tests) 7056ms
+   ✓ authentication > registers normalized email, hashes password, and never exposes hash  4526ms
+   ✓ authentication > rejects duplicate email  670ms
+   ✓ authentication > logs in successfully  744ms
+   ✓ authentication > uses identical errors for missing user and incorrect password  1071ms
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  13:43:09
+   Duration  8.18s (transform 116ms, setup 22ms, collect 788ms, tests 7.06s, environment 0ms, prepare 111ms)
+

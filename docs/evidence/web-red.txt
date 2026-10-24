@@ -1,0 +1,237 @@
+
+> test
+> vitest run
+
+
+ RUN  v5.0.5 D:/Codex/AutoVault/apps/web
+
+ ❯ src/tests/app.test.tsx (11 tests | 11 failed) 8250ms
+   × redirects protected routes to login 1037ms
+   × validates login fields 89ms
+   × validates registration password 9ms
+   × logs in and renders inventory 6ms
+   × renders live inventory and hides admin controls for users 1016ms
+   × shows admin management controls 1011ms
+   × submits filters to API 1011ms
+   × disables purchase for zero stock 1012ms
+   × confirms purchase and refreshes authoritative stock 1023ms
+   × shows API purchase failure 1018ms
+   × opens and closes mobile navigation 1014ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 11 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/tests/app.test.tsx > redirects protected routes to login
+TestingLibraryElementError: Unable to find role="heading" and name "Welcome back."
+
+Ignored nodes: comments, script, style
+<body>
+  <div />
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div />
+</body>
+ ❯ waitForWrapper ../../node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/tests/app.test.tsx:6:80
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/11]⎯
+
+ FAIL  src/tests/app.test.tsx > validates login fields
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "Sign in"
+
+There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+Ignored nodes: comments, script, style
+<body>
+  <div />
+</body>
+ ❯ Object.getElementError ../../node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/tests/app.test.tsx:7:94
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/11]⎯
+
+ FAIL  src/tests/app.test.tsx > validates registration password
+TestingLibraryElementError: Unable to find a label with the text of: Email address
+
+Ignored nodes: comments, script, style
+<body>
+  <div />
+</body>
+ ❯ Object.getElementError ../../node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ getAllByLabelText ../../node_modules/@testing-library/dom/dist/queries/label-text.js:111:38
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/tests/app.test.tsx:8:105
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/11]⎯
+
+ FAIL  src/tests/app.test.tsx > logs in and renders inventory
+TestingLibraryElementError: Unable to find a label with the text of: Email address
+
+Ignored nodes: comments, script, style
+<body>
+  <div />
+</body>
+ ❯ Object.getElementError ../../node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ getAllByLabelText ../../node_modules/@testing-library/dom/dist/queries/label-text.js:111:38
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/tests/app.test.tsx:9:100
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/11]⎯
+
+ FAIL  src/tests/app.test.tsx > renders live inventory and hides admin controls for users
+TestingLibraryElementError: Unable to find role="heading" and name "Tata Harrier"
+
+Ignored nodes: comments, script, style
+<body>
+  <div />
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div />
+</body>
+ ❯ waitForWrapper ../../node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/tests/app.test.tsx:10:108
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/11]⎯
+
+ FAIL  src/tests/app.test.tsx > shows admin management controls
+TestingLibraryElementError: Unable to find role="button" and name "Add vehicle"
+
+Ignored nodes: comments, script, style
+<body>
+  <div />
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div />
+</body>
+ ❯ waitForWrapper ../../node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/tests/app.test.tsx:11:92
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/11]⎯
+
+ FAIL  src/tests/app.test.tsx > submits filters to API
+TestingLibraryElementError: Unable to find role="heading" and name "Tata Harrier"
+
+Ignored nodes: comments, script, style
+<body>
+  <div />
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div />
+</body>
+ ❯ waitForWrapper ../../node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/tests/app.test.tsx:12:66
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/11]⎯
+
+ FAIL  src/tests/app.test.tsx > disables purchase for zero stock
+TestingLibraryElementError: Unable to find role="button" and name "Out of stock"
+
+Ignored nodes: comments, script, style
+<body>
+  <div />
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div />
+</body>
+ ❯ waitForWrapper ../../node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/tests/app.test.tsx:13:91
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/11]⎯
+
+ FAIL  src/tests/app.test.tsx > confirms purchase and refreshes authoritative stock
+TestingLibraryElementError: Unable to find role="button" and name "Purchase Tata Harrier"
+
+Ignored nodes: comments, script, style
+<body>
+  <div />
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div />
+</body>
+ ❯ waitForWrapper ../../node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/tests/app.test.tsx:14:117
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/11]⎯
+
+ FAIL  src/tests/app.test.tsx > shows API purchase failure
+TestingLibraryElementError: Unable to find role="button" and name "Purchase Tata Harrier"
+
+Ignored nodes: comments, script, style
+<body>
+  <div />
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div />
+</body>
+ ❯ waitForWrapper ../../node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/tests/app.test.tsx:15:102
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/11]⎯
+
+ FAIL  src/tests/app.test.tsx > opens and closes mobile navigation
+TestingLibraryElementError: Unable to find role="button" and name "Toggle navigation"
+
+Ignored nodes: comments, script, style
+<body>
+  <div />
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div />
+</body>
+ ❯ waitForWrapper ../../node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/tests/app.test.tsx:16:100
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/11]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  11 failed (11)
+   Start at  13:50:27
+   Duration  11.04s (tests 78%, environment 11%, import 7%, setup 3%, transform 1%)
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path D:\Codex\AutoVault\apps\web
+npm error workspace @autovault/web
+npm error location D:\Codex\AutoVault\apps\web
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run

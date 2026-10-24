@@ -1,0 +1,79 @@
+
+> test:coverage
+> npm run test:coverage --workspaces
+
+
+> test:coverage
+> vitest run --coverage
+
+
+ RUN  v5.0.5 D:/Codex/AutoVault/apps/api
+      Coverage enabled with v8
+
+
+ Test Files  5 passed (5)
+      Tests  64 passed (64)
+   Start at  13:58:30
+   Duration  38.70s (tests 80%, import 19%, transform 1%)
+
+ % Coverage report from v8
+------------------|---------|----------|---------|---------|-------------------
+File              | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+------------------|---------|----------|---------|---------|-------------------
+All files         |   98.07 |    88.67 |     100 |   98.67 |                   
+ src/controllers  |     100 |       50 |     100 |     100 |                   
+  vehicles.ts     |     100 |       50 |     100 |     100 | 28                
+ src/middleware   |   95.55 |    85.71 |     100 |   97.72 |                   
+  auth.ts         |   89.47 |       80 |     100 |   94.44 | 19                
+  errors.ts       |     100 |    88.88 |     100 |     100 | 31,50             
+ src/services     |   94.73 |       90 |     100 |   94.11 |                   
+  inventory.ts    |      90 |       75 |     100 |      90 | 24                
+------------------|---------|----------|---------|---------|-------------------
+
+=============================== Coverage summary ===============================
+Statements   : 98.07% ( 153/156 )
+Branches     : 88.67% ( 47/53 )
+Functions    : 100% ( 35/35 )
+Lines        : 98.67% ( 149/151 )
+================================================================================
+
+> test:coverage
+> vitest run --coverage
+
+
+ RUN  v5.0.5 D:/Codex/AutoVault/apps/web
+      Coverage enabled with v8
+
+
+ Test Files  1 passed (1)
+      Tests  11 passed (11)
+   Start at  13:59:11
+   Duration  9.04s (tests 49%, environment 22%, import 14%, setup 9%, transform 5%, worker 1%)
+
+ % Coverage report from v8
+-------------------|---------|----------|---------|---------|-------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------|---------|----------|---------|---------|-------------------
+All files          |   70.25 |     66.8 |   59.67 |   71.33 |                   
+ src               |      75 |    81.25 |   66.66 |   73.33 |                   
+  App.tsx          |      75 |    81.25 |   66.66 |   73.33 | 90-114            
+ src/components    |   54.83 |    29.16 |   83.33 |   58.62 |                   
+  CarArt.tsx       |     100 |       70 |     100 |     100 | 9-13              
+  Modal.tsx        |      50 |        0 |      75 |   53.84 | 18-31             
+ src/contexts      |   83.33 |       75 |      75 |   86.66 |                   
+  Auth.tsx         |   83.33 |       75 |      75 |   86.66 | 18,25             
+ src/features      |      20 |        0 |       0 |      20 |                   
+  VehicleForm.tsx  |      20 |        0 |       0 |      20 | 15-46             
+ src/pages         |   72.72 |    76.92 |   51.51 |   73.33 |                   
+  AuthPage.tsx     |    92.3 |    93.54 |     100 |   91.66 | 86                
+  ...ntoryPage.tsx |   68.75 |     72.8 |   48.38 |   69.84 | ...69-513,529-530 
+ src/services      |    90.9 |    82.35 |     100 |    90.9 |                   
+  api.ts           |    90.9 |    82.35 |     100 |    90.9 | 18                
+-------------------|---------|----------|---------|---------|-------------------
+
+=============================== Coverage summary ===============================
+Statements   : 70.25% ( 111/158 )
+Branches     : 66.8% ( 157/235 )
+Functions    : 59.67% ( 37/62 )
+Lines        : 71.33% ( 107/150 )
+================================================================================

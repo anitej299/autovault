@@ -1,0 +1,12 @@
+
+> typecheck
+> npm run typecheck --workspaces
+
+
+> typecheck
+> tsc --noEmit
+
+
+> typecheck
+> tsc --noEmit
+

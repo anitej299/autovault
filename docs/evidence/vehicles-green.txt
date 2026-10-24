@@ -1,0 +1,21 @@
+
+> test
+> vitest run tests/auth.test.ts tests/vehicles.test.ts
+
+
+ RUN  v3.2.7 D:/Codex/AutoVault/apps/api
+
+ ✓ tests/vehicles.test.ts (23 tests) 5197ms
+   ✓ requires JWT  2171ms
+   ✓ admin creates a vehicle  2136ms
+ ✓ tests/auth.test.ts (7 tests) 7755ms
+   ✓ authentication > registers normalized email, hashes password, and never exposes hash  4712ms
+   ✓ authentication > rejects duplicate email  674ms
+   ✓ authentication > logs in successfully  755ms
+   ✓ authentication > uses identical errors for missing user and incorrect password  1566ms
+
+ Test Files  2 passed (2)
+      Tests  30 passed (30)
+   Start at  13:44:03
+   Duration  15.94s (transform 223ms, setup 32ms, collect 2.04s, tests 12.95s, environment 1ms, prepare 390ms)
+

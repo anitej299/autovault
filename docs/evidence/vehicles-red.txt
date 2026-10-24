@@ -1,0 +1,234 @@
+
+> test
+> vitest run tests/vehicles.test.ts
+
+
+ RUN  v3.2.7 D:/Codex/AutoVault/apps/api
+
+ ❯ tests/vehicles.test.ts (23 tests | 22 failed) 2709ms
+   × requires JWT 2146ms
+     → expected 404 to be 401 // Object.is equality
+   × rejects invalid or expired tokens 30ms
+     → expected 404 to be 401 // Object.is equality
+   × rejects invalid or expired tokens 25ms
+     → expected 404 to be 401 // Object.is equality
+   × rejects invalid or expired tokens 22ms
+     → expected 404 to be 401 // Object.is equality
+   × admin creates a vehicle 36ms
+     → expected 404 to be 201 // Object.is equality
+   × forbids USER creation 21ms
+     → expected 404 to be 403 // Object.is equality
+   × rejects invalid input {"price":"-1"} 27ms
+     → expected 404 to be 400 // Object.is equality
+   × rejects invalid input {"price":"1.001"} 23ms
+     → expected 404 to be 400 // Object.is equality
+   × rejects invalid input {"price":"NaN"} 28ms
+     → expected 404 to be 400 // Object.is equality
+   × rejects invalid input {"price":0} 24ms
+     → expected 404 to be 400 // Object.is equality
+   × rejects invalid input {"quantity":-1} 23ms
+     → expected 404 to be 400 // Object.is equality
+   × rejects invalid input {"quantity":1.5} 22ms
+     → expected 404 to be 400 // Object.is equality
+   × rejects invalid input {"make":""} 22ms
+     → expected 404 to be 400 // Object.is equality
+   × rejects invalid input {"model":""} 24ms
+     → expected 404 to be 400 // Object.is equality
+   × rejects invalid input {"category":""} 22ms
+     → expected 404 to be 400 // Object.is equality
+   × rejects invalid input {"unsafe":true} 21ms
+     → expected 404 to be 400 // Object.is equality
+   × requires all fields 22ms
+     → expected 404 to be 400 // Object.is equality
+   × lists inventory including sold out 29ms
+     → expected 404 to be 200 // Object.is equality
+   × updates a vehicle 28ms
+     → expected 404 to be 200 // Object.is equality
+   ✓ returns 404 for absent update 24ms
+   × deletes as admin 33ms
+     → expected 404 to be 200 // Object.is equality
+   × forbids USER deletion and update 34ms
+     → expected 404 to be 403 // Object.is equality
+   × rejects malformed UUID 21ms
+     → expected 404 to be 400 // Object.is equality
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 22 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/vehicles.test.ts > requires JWT
+AssertionError: expected 404 to be 401 // Object.is equality
+
+- Expected
++ Received
+
+- 401
++ 404
+
+ ❯ tests/vehicles.test.ts:13:86
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/22]⎯
+
+ FAIL  tests/vehicles.test.ts > rejects invalid or expired tokens
+ FAIL  tests/vehicles.test.ts > rejects invalid or expired tokens
+ FAIL  tests/vehicles.test.ts > rejects invalid or expired tokens
+AssertionError: expected 404 to be 401 // Object.is equality
+
+- Expected
++ Received
+
+- 401
++ 404
+
+ ❯ tests/vehicles.test.ts:14:285
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/22]⎯
+
+ FAIL  tests/vehicles.test.ts > admin creates a vehicle
+AssertionError: expected 404 to be 201 // Object.is equality
+
+- Expected
++ Received
+
+- 201
++ 404
+
+ ❯ tests/vehicles.test.ts:15:148
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/22]⎯
+
+ FAIL  tests/vehicles.test.ts > forbids USER creation
+AssertionError: expected 404 to be 403 // Object.is equality
+
+- Expected
++ Received
+
+- 403
++ 404
+
+ ❯ tests/vehicles.test.ts:16:137
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/22]⎯
+
+ FAIL  tests/vehicles.test.ts > rejects invalid input {"price":"-1"}
+ FAIL  tests/vehicles.test.ts > rejects invalid input {"price":"1.001"}
+ FAIL  tests/vehicles.test.ts > rejects invalid input {"price":"NaN"}
+ FAIL  tests/vehicles.test.ts > rejects invalid input {"price":0}
+ FAIL  tests/vehicles.test.ts > rejects invalid input {"quantity":-1}
+ FAIL  tests/vehicles.test.ts > rejects invalid input {"quantity":1.5}
+ FAIL  tests/vehicles.test.ts > rejects invalid input {"make":""}
+ FAIL  tests/vehicles.test.ts > rejects invalid input {"model":""}
+ FAIL  tests/vehicles.test.ts > rejects invalid input {"category":""}
+ FAIL  tests/vehicles.test.ts > rejects invalid input {"unsafe":true}
+AssertionError: expected 404 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 404
+
+ ❯ tests/vehicles.test.ts:17:298
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/22]⎯
+
+ FAIL  tests/vehicles.test.ts > requires all fields
+AssertionError: expected 404 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 404
+
+ ❯ tests/vehicles.test.ts:18:131
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/22]⎯
+
+ FAIL  tests/vehicles.test.ts > lists inventory including sold out
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/vehicles.test.ts:19:199
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/22]⎯
+
+ FAIL  tests/vehicles.test.ts > updates a vehicle
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/vehicles.test.ts:20:217
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/22]⎯
+
+ FAIL  tests/vehicles.test.ts > deletes as admin
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/vehicles.test.ts:22:177
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/22]⎯
+
+ FAIL  tests/vehicles.test.ts > forbids USER deletion and update
+AssertionError: expected 404 to be 403 // Object.is equality
+
+- Expected
++ Received
+
+- 403
++ 404
+
+ ❯ tests/vehicles.test.ts:23:192
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/22]⎯
+
+ FAIL  tests/vehicles.test.ts > rejects malformed UUID
+AssertionError: expected 404 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 404
+
+ ❯ tests/vehicles.test.ts:24:131
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/22]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  22 failed | 1 passed (23)
+   Start at  13:43:30
+   Duration  3.86s (transform 114ms, setup 21ms, collect 792ms, tests 2.71s, environment 0ms, prepare 123ms)
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path D:\Codex\AutoVault\apps\api
+npm error workspace @autovault/api
+npm error location D:\Codex\AutoVault\apps\api
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run tests/vehicles.test.ts

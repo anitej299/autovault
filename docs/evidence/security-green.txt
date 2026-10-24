@@ -1,0 +1,15 @@
+
+> test
+> vitest run tests/security.test.ts
+
+
+ RUN  v3.2.7 D:/Codex/AutoVault/apps/api
+
+ ✓ tests/security.test.ts (6 tests) 2288ms
+   ✓ reports database health  2211ms
+
+ Test Files  1 passed (1)
+      Tests  6 passed (6)
+   Start at  13:47:50
+   Duration  3.92s (transform 230ms, setup 32ms, collect 1.13s, tests 2.29s, environment 0ms, prepare 153ms)
+

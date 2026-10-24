@@ -1,0 +1,25 @@
+
+> test
+> vitest run tests/inventory.test.ts
+
+
+ RUN  v3.2.7 D:/Codex/AutoVault/apps/api
+
+stderr | tests/inventory.test.ts > rolls back stock when purchase persistence fails
+Request failed 
+Invalid `tx.vehicle.update()` invocation in
+D:\Codex\AutoVault\apps\api\src\services\inventory.ts:1:433
+
+→ 1 import {withLockedVehicle} from '../repositories/inventory.js';import {HttpError} from '../utils/errors.js';export async function purchaseVehicle(id:string,userId:string,quantity:number){return withLockedVehicle(id,async(tx,vehicle)=>{if(vehicle.quantity<quantity)throw new HttpError(409,'Insufficient stock');const updated=await tx.vehicle.update(
+Error occurred during query execution:
+ConnectorError(ConnectorError { user_facing_error: None, kind: QueryError(PostgresError { code: "P0001", message: "injected test failure", severity: "ERROR", detail: None, column: None, hint: None }), transient: false })
+
+ ✓ tests/inventory.test.ts (14 tests) 7029ms
+   ✓ defaults to one and records exact price and buyer  4261ms
+   ✓ allows exactly one concurrent purchase of last unit  2109ms
+
+ Test Files  1 passed (1)
+      Tests  14 passed (14)
+   Start at  13:46:42
+   Duration  8.37s (transform 172ms, setup 26ms, collect 950ms, tests 7.03s, environment 0ms, prepare 126ms)
+

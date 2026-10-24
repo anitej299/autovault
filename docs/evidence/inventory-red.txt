@@ -1,0 +1,185 @@
+
+> test
+> vitest run tests/inventory.test.ts
+
+
+ RUN  v3.2.7 D:/Codex/AutoVault/apps/api
+
+ ❯ tests/inventory.test.ts (14 tests | 13 failed) 5027ms
+   × defaults to one and records exact price and buyer 4306ms
+     → expected 404 to be 201 // Object.is equality
+   × purchases multiple units 42ms
+     → expected 404 to be 201 // Object.is equality
+   × rejects purchase above available stock 0 35ms
+     → expected 404 to be 409 // Object.is equality
+   × rejects purchase above available stock 1 81ms
+     → expected 404 to be 409 // Object.is equality
+   × allows exactly one concurrent purchase of last unit 77ms
+     → expected [ 404, 404 ] to deeply equal [ 201, 409 ]
+   × rolls back stock when purchase persistence fails 103ms
+     → expected 404 to be 500 // Object.is equality
+   × restocks as admin 38ms
+     → expected 404 to be 200 // Object.is equality
+   × forbids USER restock 42ms
+     → expected 404 to be 403 // Object.is equality
+   × rejects invalid purchase/restock quantity 0 40ms
+     → expected 404 to be 400 // Object.is equality
+   × rejects invalid purchase/restock quantity -1 36ms
+     → expected 404 to be 400 // Object.is equality
+   × rejects invalid purchase/restock quantity 1.5 37ms
+     → expected 404 to be 400 // Object.is equality
+   × rejects invalid purchase/restock quantity 2 52ms
+     → expected 404 to be 400 // Object.is equality
+   ✓ returns 404 for nonexistent purchase and restock 72ms
+   × preserves purchase history by rejecting referenced vehicle deletion 63ms
+     → expected 200 to be 409 // Object.is equality
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 13 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/inventory.test.ts > defaults to one and records exact price and buyer
+AssertionError: expected 404 to be 201 // Object.is equality
+
+- Expected
++ Received
+
+- 201
++ 404
+
+ ❯ tests/inventory.test.ts:5:108
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/13]⎯
+
+ FAIL  tests/inventory.test.ts > purchases multiple units
+AssertionError: expected 404 to be 201 // Object.is equality
+
+- Expected
++ Received
+
+- 201
++ 404
+
+ ❯ tests/inventory.test.ts:6:95
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/13]⎯
+
+ FAIL  tests/inventory.test.ts > rejects purchase above available stock 0
+ FAIL  tests/inventory.test.ts > rejects purchase above available stock 1
+AssertionError: expected 404 to be 409 // Object.is equality
+
+- Expected
++ Received
+
+- 409
++ 404
+
+ ❯ tests/inventory.test.ts:7:187
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/13]⎯
+
+ FAIL  tests/inventory.test.ts > allows exactly one concurrent purchase of last unit
+AssertionError: expected [ 404, 404 ] to deeply equal [ 201, 409 ]
+
+- Expected
++ Received
+
+  [
+-   201,
+-   409,
++   404,
++   404,
+  ]
+
+ ❯ tests/inventory.test.ts:8:235
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/13]⎯
+
+ FAIL  tests/inventory.test.ts > rolls back stock when purchase persistence fails
+AssertionError: expected 404 to be 500 // Object.is equality
+
+- Expected
++ Received
+
+- 500
++ 404
+
+ ❯ tests/inventory.test.ts:9:408
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/13]⎯
+
+ FAIL  tests/inventory.test.ts > restocks as admin
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/inventory.test.ts:10:169
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/13]⎯
+
+ FAIL  tests/inventory.test.ts > forbids USER restock
+AssertionError: expected 404 to be 403 // Object.is equality
+
+- Expected
++ Received
+
+- 403
++ 404
+
+ ❯ tests/inventory.test.ts:11:163
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/13]⎯
+
+ FAIL  tests/inventory.test.ts > rejects invalid purchase/restock quantity 0
+ FAIL  tests/inventory.test.ts > rejects invalid purchase/restock quantity -1
+ FAIL  tests/inventory.test.ts > rejects invalid purchase/restock quantity 1.5
+ FAIL  tests/inventory.test.ts > rejects invalid purchase/restock quantity 2
+AssertionError: expected 404 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 404
+
+ ❯ tests/inventory.test.ts:12:133
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/13]⎯
+
+ FAIL  tests/inventory.test.ts > preserves purchase history by rejecting referenced vehicle deletion
+AssertionError: expected 200 to be 409 // Object.is equality
+
+- Expected
++ Received
+
+- 409
++ 200
+
+ ❯ tests/inventory.test.ts:14:200
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/13]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  13 failed | 1 passed (14)
+   Start at  13:45:31
+   Duration  6.54s (transform 195ms, setup 30ms, collect 1.07s, tests 5.03s, environment 0ms, prepare 147ms)
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path D:\Codex\AutoVault\apps\api
+npm error workspace @autovault/api
+npm error location D:\Codex\AutoVault\apps\api
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run tests/inventory.test.ts

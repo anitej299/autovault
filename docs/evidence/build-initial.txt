@@ -1,0 +1,22 @@
+
+> build
+> npm run build --workspaces
+
+
+> build
+> tsc
+
+
+> build
+> tsc --noEmit && vite build
+
+vite v8.3.5 building client environment for production...
+transforming...
+✓ 1723 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.46 kB │ gzip:   0.30 kB
+dist/assets/index-J_ZqSxWz.css   19.25 kB │ gzip:   4.62 kB
+dist/assets/index-D3gFJxgi.js   445.45 kB │ gzip: 138.15 kB
+
+✓ built in 2.67s

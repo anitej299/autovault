@@ -1,0 +1,93 @@
+
+> pretest:coverage
+> npm run db:test:migrate
+
+
+> db:test:migrate
+> node scripts/test-database.mjs
+
+Environment variables loaded from .env
+Prisma schema loaded from apps\api\prisma\schema.prisma
+Datasource "db": PostgreSQL database "autovault_test", schema "public" at "localhost:5433"
+
+1 migration found in prisma/migrations
+
+
+No pending migrations to apply.
+
+> test:coverage
+> npm run test:coverage --workspaces
+
+
+> test:coverage
+> vitest run --coverage
+
+
+ RUN  v5.0.5 D:/Codex/AutoVault/apps/api
+      Coverage enabled with v8
+
+
+ Test Files  6 passed (6)
+      Tests  71 passed (71)
+   Start at  18:52:00
+   Duration  32.75s (tests 86%, import 13%, worker 1%)
+
+ % Coverage report from v8
+------------------|---------|----------|---------|---------|-------------------
+File              | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+------------------|---------|----------|---------|---------|-------------------
+All files         |   98.71 |    90.56 |     100 |   99.33 |                   
+ src/controllers  |     100 |       50 |     100 |     100 |                   
+  vehicles.ts     |     100 |       50 |     100 |     100 | 28                
+ src/middleware   |   95.55 |    85.71 |     100 |   97.72 |                   
+  auth.ts         |   89.47 |       80 |     100 |   94.44 | 19                
+  errors.ts       |     100 |    88.88 |     100 |     100 | 31,50             
+------------------|---------|----------|---------|---------|-------------------
+
+=============================== Coverage summary ===============================
+Statements   : 98.71% ( 154/156 )
+Branches     : 90.56% ( 48/53 )
+Functions    : 100% ( 35/35 )
+Lines        : 99.33% ( 150/151 )
+================================================================================
+
+> test:coverage
+> vitest run --coverage
+
+
+ RUN  v5.0.5 D:/Codex/AutoVault/apps/web
+      Coverage enabled with v8
+
+
+ Test Files  1 passed (1)
+      Tests  11 passed (11)
+   Start at  18:52:34
+   Duration  5.45s (tests 71%, environment 16%, import 7%, setup 5%, transform 1%, worker 1%)
+
+ % Coverage report from v8
+-------------------|---------|----------|---------|---------|-------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------|---------|----------|---------|---------|-------------------
+All files          |   70.25 |     66.8 |   59.67 |   71.52 |                   
+ src               |      75 |    81.25 |   66.66 |   73.33 |                   
+  App.tsx          |      75 |    81.25 |   66.66 |   73.33 | 90-114            
+ src/components    |   56.25 |    29.16 |   83.33 |      60 |                   
+  CarArt.tsx       |     100 |       70 |     100 |     100 | 11-15             
+  Modal.tsx        |      50 |        0 |      75 |   53.84 | 18-31             
+ src/contexts      |   82.35 |       75 |      75 |   86.66 |                   
+  Auth.tsx         |   82.35 |       75 |      75 |   86.66 | 18,25             
+ src/features      |      20 |        0 |       0 |      20 |                   
+  VehicleForm.tsx  |      20 |        0 |       0 |      20 | 15-46             
+ src/pages         |   72.72 |    76.92 |   51.51 |   73.33 |                   
+  AuthPage.tsx     |    92.3 |    93.54 |     100 |   91.66 | 86                
+  ...ntoryPage.tsx |   68.75 |     72.8 |   48.38 |   69.84 | ...69-513,529-530 
+ src/services      |    90.9 |    82.35 |     100 |    90.9 |                   
+  api.ts           |    90.9 |    82.35 |     100 |    90.9 | 18                
+-------------------|---------|----------|---------|---------|-------------------
+
+=============================== Coverage summary ===============================
+Statements   : 70.25% ( 111/158 )
+Branches     : 66.8% ( 157/235 )
+Functions    : 59.67% ( 37/62 )
+Lines        : 71.52% ( 108/151 )
+================================================================================

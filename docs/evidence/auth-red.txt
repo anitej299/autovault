@@ -1,0 +1,110 @@
+
+> test
+> vitest run tests/auth.test.ts
+
+
+ RUN  v3.2.7 D:/Codex/AutoVault/apps/api
+
+ ❯ tests/auth.test.ts (7 tests | 7 failed) 3425ms
+   × authentication > registers normalized email, hashes password, and never exposes hash 2927ms
+     → expected 404 to be 201 // Object.is equality
+   × authentication > rejects duplicate email 45ms
+     → expected 404 to be 409 // Object.is equality
+   × authentication > rejects unsafe registration {"email":"driver@example.com","password":"weak"} 84ms
+     → expected 404 to be 400 // Object.is equality
+   × authentication > rejects unsafe registration {"email":"driver@example.com","password":"SecurePass123!","role":"ADMIN"} 54ms
+     → expected 404 to be 400 // Object.is equality
+   × authentication > rejects unsafe registration {"email":"bad","password":"SecurePass123!"} 74ms
+     → expected 404 to be 400 // Object.is equality
+   × authentication > logs in successfully 107ms
+     → expected 404 to be 200 // Object.is equality
+   × authentication > uses identical errors for missing user and incorrect password 117ms
+     → expected 404 to be 401 // Object.is equality
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/auth.test.ts > authentication > registers normalized email, hashes password, and never exposes hash
+AssertionError: expected 404 to be 201 // Object.is equality
+
+ Test Files  1 failed (1)
+      Tests  7 failed (7)
+   Start at  13:42:17
+   Duration  8.20s (transform 397ms, setup 74ms, collect 2.02s, tests 3.43s, environment 1ms, prepare 758ms)
+
+
+- Expected
++ Received
+
+- 201
++ 404
+
+ ❯ tests/auth.test.ts:10:208
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  tests/auth.test.ts > authentication > rejects duplicate email
+AssertionError: expected 404 to be 409 // Object.is equality
+
+- Expected
++ Received
+
+- 409
++ 404
+
+ ❯ tests/auth.test.ts:11:186
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  tests/auth.test.ts > authentication > rejects unsafe registration {"email":"driver@example.com","password":"weak"}
+ FAIL  tests/auth.test.ts > authentication > rejects unsafe registration {"email":"driver@example.com","password":"SecurePass123!","role":"ADMIN"}
+ FAIL  tests/auth.test.ts > authentication > rejects unsafe registration {"email":"bad","password":"SecurePass123!"}
+AssertionError: expected 404 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 404
+
+ ❯ tests/auth.test.ts:12:225
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  tests/auth.test.ts > authentication > logs in successfully
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/auth.test.ts:13:188
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  tests/auth.test.ts > authentication > uses identical errors for missing user and incorrect password
+AssertionError: expected 404 to be 401 // Object.is equality
+
+- Expected
++ Received
+
+- 401
++ 404
+
+ ❯ tests/auth.test.ts:14:361
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path D:\Codex\AutoVault\apps\api
+npm error workspace @autovault/api
+npm error location D:\Codex\AutoVault\apps\api
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run tests/auth.test.ts

@@ -1,0 +1,66 @@
+
+> pretest:e2e
+> npm run db:test:migrate && npm run build
+
+
+> db:test:migrate
+> node scripts/test-database.mjs
+
+Environment variables loaded from .env
+Prisma schema loaded from apps\api\prisma\schema.prisma
+Datasource "db": PostgreSQL database "autovault_test", schema "public" at "localhost:5433"
+
+1 migration found in prisma/migrations
+
+
+No pending migrations to apply.
+
+> build
+> npm run build --workspaces
+
+
+> build
+> tsc
+
+
+> build
+> tsc --noEmit && vite build
+
+vite v7.3.7 building client environment for production...
+transforming...
+../../node_modules/zod/v4/core/util.js (400:0): A comment
+
+"// Wrapped in a `@__PURE__` IIFE: esbuild never tree-shakes a top-level initializer that contains a member access on `Number`, so the bare object literal survived into every bundle."
+
+in "../../node_modules/zod/v4/core/util.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+../../node_modules/zod/v4/core/regexes.js (74:0): A comment
+
+"/** Anchors a pattern source. The interpolation lives here rather than at the call site because
+ * esbuild will not drop a `@__PURE__` call whose own argument interpolates a variable, but it
+ * will drop `anchor(dateSource)`. Keeping it inline pinned `date` into every bundle. */"
+
+in "../../node_modules/zod/v4/core/regexes.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+✓ 1741 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.46 kB │ gzip:   0.30 kB
+dist/assets/index-utPvaBnG.css   20.48 kB │ gzip:   4.61 kB
+dist/assets/index-D8_jbcdh.js   451.68 kB │ gzip: 141.37 kB
+✓ built in 12.34s
+
+> test:e2e
+> playwright test
+
+[WebServer] (node:21376) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 4 tests using 1 worker
+
+(node:9824) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 e2e\flows.spec.ts:2:5 › unauthenticated route redirects (1.6s)
+  ok 2 e2e\flows.spec.ts:9:5 › register login filter purchase and prevent sold-out purchases (4.6s)
+  ok 3 e2e\flows.spec.ts:41:5 › admin creates updates restocks and deletes (3.8s)
+  ok 4 e2e\flows.spec.ts:75:5 › mobile navigation and layout (2.0s)
+
+  4 passed (23.9s)

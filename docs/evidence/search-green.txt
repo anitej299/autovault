@@ -1,0 +1,15 @@
+
+> test
+> vitest run tests/search.test.ts
+
+
+ RUN  v3.2.7 D:/Codex/AutoVault/apps/api
+
+ ✓ tests/search.test.ts (14 tests) 4934ms
+   ✓ filters make=ta  4231ms
+
+ Test Files  1 passed (1)
+      Tests  14 passed (14)
+   Start at  13:45:12
+   Duration  6.42s (transform 173ms, setup 35ms, collect 1.00s, tests 4.93s, environment 0ms, prepare 148ms)
+

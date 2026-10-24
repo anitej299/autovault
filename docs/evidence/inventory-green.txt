@@ -1,0 +1,68 @@
+
+> test
+> vitest run tests/inventory.test.ts
+
+
+ RUN  v3.2.7 D:/Codex/AutoVault/apps/api
+
+stderr | tests/inventory.test.ts > allows exactly one concurrent purchase of last unit
+Request failed Transaction API error: Unable to start a transaction in the given time.
+
+stderr | tests/inventory.test.ts > rolls back stock when purchase persistence fails
+Request failed 
+Invalid `tx.vehicle.update()` invocation in
+D:\Codex\AutoVault\apps\api\src\services\inventory.ts:1:433
+
+→ 1 import {withLockedVehicle} from '../repositories/inventory.js';import {HttpError} from '../utils/errors.js';export async function purchaseVehicle(id:string,userId:string,quantity:number){return withLockedVehicle(id,async(tx,vehicle)=>{if(vehicle.quantity<quantity)throw new HttpError(409,'Insufficient stock');const updated=await tx.vehicle.update(
+Error occurred during query execution:
+ConnectorError(ConnectorError { user_facing_error: None, kind: QueryError(PostgresError { code: "P0001", message: "injected test failure", severity: "ERROR", detail: None, column: None, hint: None }), transient: false })
+
+ ❯ tests/inventory.test.ts (14 tests | 1 failed) 7055ms
+   ✓ defaults to one and records exact price and buyer  4248ms
+   ✓ purchases multiple units 49ms
+   ✓ rejects purchase above available stock 0 47ms
+   ✓ rejects purchase above available stock 1 56ms
+   × allows exactly one concurrent purchase of last unit 2071ms
+     → expected [ 201, 500 ] to deeply equal [ 201, 409 ]
+   ✓ rolls back stock when purchase persistence fails 141ms
+   ✓ restocks as admin 57ms
+   ✓ forbids USER restock 42ms
+   ✓ rejects invalid purchase/restock quantity 0 49ms
+   ✓ rejects invalid purchase/restock quantity -1 51ms
+   ✓ rejects invalid purchase/restock quantity 1.5 52ms
+   ✓ rejects invalid purchase/restock quantity 2 55ms
+   ✓ returns 404 for nonexistent purchase and restock 52ms
+   ✓ preserves purchase history by rejecting referenced vehicle deletion 79ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/inventory.test.ts > allows exactly one concurrent purchase of last unit
+AssertionError: expected [ 201, 500 ] to deeply equal [ 201, 409 ]
+
+- Expected
++ Received
+
+  [
+    201,
+-   409,
++   500,
+  ]
+
+ ❯ tests/inventory.test.ts:8:235
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 13 passed (14)
+   Start at  13:45:59
+   Duration  8.90s (transform 260ms, setup 32ms, collect 1.28s, tests 7.05s, environment 0ms, prepare 200ms)
+
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path D:\Codex\AutoVault\apps\api
+npm error workspace @autovault/api
+npm error location D:\Codex\AutoVault\apps\api
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c vitest run tests/inventory.test.ts
