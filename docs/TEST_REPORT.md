@@ -142,7 +142,7 @@ Remaining / candid scope:
 
 - Rollup emits two harmless third-party Zod comment-annotation warnings; builds complete. jsdom has a transitive deprecated whatwg-encoding package. Final npm audit reports zero vulnerabilities; this is not a security audit guarantee.
 - At the verification timestamp, no public GitHub repository existed. Publication was subsequently authorized to https://github.com/anitej299/autovault. No deployment, payment integration or human review is claimed.
-- PROMPTS.md still requires the user's authentic full conversation export/link. No reconstructed transcript was fabricated.
+- Follow-up documentation update: PROMPTS.md now contains an authentic conversation share link. The sharing tool reports a workspace audience; public access is not verified. No reconstructed transcript was fabricated. This documentation update does not change the test results above.
 - Frontend component coverage remains below 85%; E2E covers the principal management flow but does not replace a full accessibility audit or multi-browser/device matrix.
 - Administrator absolute quantity edits are documented last-writer-wins stock corrections; optimistic version checks are not implemented.
 - No purchase idempotency key, refresh tokens, shared production rate-limit store, password-reset/email-verification workflow or purchase-history UI.

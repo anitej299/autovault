@@ -259,11 +259,11 @@ The following are actual Chromium captures from the running application with Pos
 
 OpenAI Codex / ChatGPT assisted with architecture, test design, implementation, debugging, local command execution, browser automation, documentation and review. The assistant executed real RED/GREEN tests and captured actual tool outputs. The user supplied the assignment and explicitly authorized moving the project to D: after C: filled up. **No human code review, manual acceptance test, or production verification has been claimed.**
 
-The main value of the assistance was iterating across database, API and UI boundaries; the real concurrency test found a timeout that a superficial mocked test would have missed. Automated passing tests do not replace an independent security review, accessibility audit or deployment validation. The original full transcript is not accessible to the assistant: [PROMPTS.md](PROMPTS.md) explicitly requests an authentic export/link. It does not contain a fictional transcript or reconstructed raw prompts.
+The main value of the assistance was iterating across database, API and UI boundaries; the real concurrency test found a timeout that a superficial mocked test would have missed. Automated passing tests do not replace an independent security review, accessibility audit or deployment validation. An authentic conversation share link is recorded in [PROMPTS.md](PROMPTS.md). The sharing tool reports a workspace audience; access by public repository visitors is not verified. The link is a snapshot created before this documentation update, not a fabricated or reconstructed transcript.
 
 ## Publish to GitHub
 
-Public repository: [anitej299/autovault](https://github.com/anitej299/autovault). The original TDD history is preserved. PROMPTS.md still awaits the authentic conversation export/link.
+Public repository: [anitej299/autovault](https://github.com/anitej299/autovault). The original TDD history is preserved. PROMPTS.md contains the authentic conversation share link; its workspace audience may limit access for public visitors.
 
 To publish a separate copy under your own account, create an empty public repository and run:
 
