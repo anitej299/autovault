@@ -166,3 +166,12 @@ it("rejects malformed UUID", async () => {
     ).status,
   ).toBe(400);
 });
+
+it("distinguishes nonexistent vehicle errors from absent routes", async () => {
+  const r = await request(app)
+    .put("/api/vehicles/" + randomUUID())
+    .auth(admin, { type: "bearer" })
+    .send(vehicle);
+  expect(r.status).toBe(404);
+  expect(r.body.error.message).toBe("Record not found");
+});

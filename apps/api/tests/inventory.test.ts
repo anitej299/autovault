@@ -147,3 +147,29 @@ it("preserves purchase history by rejecting referenced vehicle deletion", async 
   ).toBe(409);
   expect(await db.purchase.count()).toBe(1);
 });
+
+it("reports missing vehicle JSON for purchases", async () => {
+  vehicleId = randomUUID();
+  const r = await purchase();
+  expect(r.status).toBe(404);
+  expect(r.body.error.message).toBe("Vehicle not found");
+});
+it("rejects restock overflow without changing stock", async () => {
+  await db.vehicle.update({
+    where: { id: vehicleId },
+    data: { quantity: 2147483647 },
+  });
+  const r = await request(app)
+    .post("/api/vehicles/" + vehicleId + "/restock")
+    .auth(admin, { type: "bearer" })
+    .send({ quantity: 1 });
+  expect(r.status).toBe(409);
+  expect(
+    (await db.vehicle.findUniqueOrThrow({ where: { id: vehicleId } })).quantity,
+  ).toBe(2147483647);
+});
+it("rejects unknown purchase fields and malformed identifiers", async () => {
+  expect((await purchase({ quantity: 1, price: "1" })).status).toBe(400);
+  vehicleId = "bad";
+  expect((await purchase()).status).toBe(400);
+});
